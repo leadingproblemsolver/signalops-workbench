@@ -1,0 +1,671 @@
+# signalops-workbench Complete Project Bundle
+# Canonical project specification. Update this file when implementation reality changes.
+# Capability statuses: implemented | partially_implemented | documented | planned | deferred.
+
+schema:
+  name: project_engineering_specification
+  version: 1.0.0
+  generated_on: '2026-07-22'
+  timezone: Asia/Qatar
+  status_vocabulary:
+  - implemented
+  - partially_implemented
+  - documented
+  - planned
+  - deferred
+project_identity:
+  id: signalops_workbench
+  name: SignalOps Workbench
+  repository: signalops-workbench
+  package: signalops-workbench
+  python_module: signalops
+  cli: signalops
+  version: 0.1.0
+  current_stage: installable_vertical_slice
+  project_type:
+  - developer_tooling
+  - evidence_operations
+  - workflow_policy_engine
+  - market_validation_infrastructure
+  one_liner: A policy-driven workbench that converts channel-native public evidence into durable decisions, handoffs,
+    and qualified next actions.
+  system_thesis: Channels require distinct norms, but evidence, decision history, and continuation state must remain
+    unified.
+  primary_users:
+  - technical founders
+  - developer-tooling researchers
+  - product discovery operators
+  - engineering teams validating workflow problems
+  primary_use_cases:
+  - configure one target project
+  - preserve channel-specific rules
+  - ingest evidence-bearing surfaces
+  - score relevance and actionability deterministically
+  - enforce public/private permission boundaries
+  - render restartable channel briefs
+  - produce session handoffs and CRM exports
+  direct_project_benefit:
+    improves_core_user_result: true
+    removes_current_blocker: true
+    reduces_operational_risk: true
+    creates_external_proof: true
+    accelerates_validation: true
+    creates_reusable_infrastructure: true
+    explanation: The repository operationalizes the supplied command-center, separate-channel, shared-CRM, and handoff
+      structure without binding the engine to incident response.
+  example_domain:
+    name: TraceCrumb
+    role: complete configuration and playbook example
+    framework_dependency: false
+    incident_relevance: example_content_only
+  source_artifacts:
+  - docs/reference/structure-context.md
+  - examples/tracecrumb/project.json
+  - examples/tracecrumb/channels/
+  - examples/tracecrumb/playbooks/
+  - examples/generic/
+problem_and_value:
+  surface_problem: Project evidence, outreach decisions, and follow-up state become fragmented across channels and
+    sessions.
+  hidden_engineering_problem: Support heterogeneous channel policies over shared durable evidence while preserving
+    provenance, permission, idempotency, decision traceability, and resumable handoffs.
+  failure_if_unsolved:
+  - channel norms collapse into generic messaging
+  - the same surface is logged repeatedly
+  - exact user language is replaced by interpretation
+  - weak interest is mistaken for strong evidence
+  - private contact occurs without permission
+  - each session restarts without accumulated state
+  - project decisions cannot be traced to observed evidence
+  why_difficult:
+  - concern: heterogeneous_policy
+    difficulty: Each channel has distinct norms, thresholds, and acceptable next actions.
+  - concern: shared_state
+    difficulty: Channel separation must not fragment project truth or CRM continuity.
+  - concern: provenance
+    difficulty: Exact language, source URL, interpretation, and action must remain distinguishable.
+  - concern: permission
+    difficulty: A high score must not bypass channel-specific consent requirements.
+  - concern: idempotency
+    difficulty: Repeated processing should update one surface rather than inflate evidence.
+  - concern: evaluation
+    difficulty: Action thresholds must eventually be calibrated against later outcomes, not intuition.
+  value_created:
+    immediate:
+    - one shared source of truth
+    - channel-native decision rules
+    - reproducible handoffs
+    - ranked next actions
+    reusable:
+    - generic project schema
+    - policy schema
+    - surface evidence model
+    - decision engine
+    - brief and handoff renderer
+    portfolio:
+    - workflow architecture
+    - policy engines
+    - provenance
+    - human factors
+    - privacy boundaries
+    - measurement discipline
+  explicit_non_goals:
+  - web scraping
+  - account automation
+  - mass outreach
+  - automatic message sending
+  - private-data inference
+  - generic copy generation
+  - autonomous product decisions
+  - incident intelligence as a required module
+  scope_boundary:
+    in_scope:
+    - local project and channel configuration
+    - manual evidence-bearing surface ingestion
+    - deterministic score and action selection
+    - permission-aware escalation
+    - brief, handoff, and CRM output
+    - TraceCrumb and generic examples
+    out_of_scope_until_evidence:
+    - remote connectors
+    - email or social account actions
+    - multi-user authorization
+    - automatic outcome tracking
+    - model-generated responses
+    - cross-project analytics
+system_architecture:
+  architecture_style: modular_monolith
+  deployment_mode: local_first_cli
+  authoritative_path:
+  - project_configuration
+  - channel_policy
+  - evidence_surface
+  - deterministic_scoring
+  - policy_and_permission_gate
+  - sqlite_transaction
+  - surface_projection
+  - decision_event
+  output_path:
+  - shared_project_state
+  - ranked_next_actions
+  - channel_execution_brief
+  - session_handoff
+  - crm_csv
+  source_of_truth:
+    project: SQLite projects table
+    channel_policies: SQLite policies table
+    surface_current_state: SQLite surfaces table
+    decision_history: SQLite events table
+    configuration_sources: project and channel JSON files
+  consistency_model:
+    local_writes: ACID transaction
+    duplicate_surface_behavior: upsert by stable external_id
+    decision_and_surface_update: same transaction
+    remote_consistency: not implemented
+  technology:
+    language: Python 3.11+
+    database: SQLite
+    packaging: setuptools via pyproject.toml
+    testing: unittest
+    ci: GitHub Actions
+    external_runtime_dependencies: []
+  components:
+  - name: domain_models
+    path: src/signalops/models.py
+    responsibility: project, policy, and surface contracts
+    status: implemented
+  - name: decision_engine
+    path: src/signalops/scoring.py
+    responsibility: composite score, permission gates, explainable action decision
+    status: implemented
+  - name: application_engine
+    path: src/signalops/engine.py
+    responsibility: stable external ID and processing orchestration
+    status: implemented
+  - name: persistence_store
+    path: src/signalops/store.py
+    responsibility: transactions, idempotent upsert, project/policy state, events
+    status: implemented
+  - name: rendering
+    path: src/signalops/render.py
+    responsibility: channel brief, handoff, and CSV output
+    status: implemented
+  - name: cli
+    path: src/signalops/cli.py
+    responsibility: operator interface and composition root
+    status: implemented
+  deferred_architecture:
+  - capability: PostgreSQL
+    trigger: shared remote operation or concurrent team members
+    status: deferred
+  - capability: connector_workers
+    trigger: manual import becomes the dominant bottleneck and platform terms permit automation
+    status: deferred
+  - capability: generative_response_assistance
+    trigger: evidence and policy record exist before generation and evaluation is defined
+    status: deferred
+  - capability: multi_project_portfolio_analytics
+    trigger: several projects produce enough comparable outcome data
+    status: deferred
+state_contracts_and_invariants:
+  entities:
+    project:
+      fields:
+      - project_id
+      - name
+      - current_stage
+      - core_problem
+      - target_users
+      - strong_evidence
+      - non_goals
+      - evidence_ladder
+    policy:
+      fields:
+      - channel
+      - purpose
+      - tone
+      - allowed
+      - forbidden
+      - strong_signals
+      - weak_signals
+      - reply_threshold
+      - dm_threshold
+      - call_threshold
+      - dm_requires_response
+      - output_sections
+    surface:
+      fields:
+      - external_id
+      - channel
+      - title
+      - url
+      - who
+      - pain
+      - exact_language
+      - relevance
+      - urgency
+      - conversation
+      - responded
+    decision:
+      fields:
+      - action
+      - score
+      - reason
+      - trace
+    event:
+      fields:
+      - id
+      - entity_id
+      - type
+      - payload
+      - occurred_at
+      event_types:
+      - project_configured
+      - policy_configured
+      - surface_scored
+  action_model:
+    actions:
+    - ignore
+    - save
+    - public_reply
+    - dm
+    - call
+    composite_score:
+      formula: 0.50 * relevance + 0.30 * conversation + 0.20 * urgency
+      range: 0..10
+      reasoning: Relevance dominates because activity on the wrong problem surface remains waste.
+    decision_order:
+    - ignore when relevance < 4
+    - call when score >= call_threshold and prior response exists
+    - dm when score >= dm_threshold and policy permission allows it
+    - public_reply when DM threshold is met but response permission is absent
+    - public_reply when score >= reply_threshold
+    - save otherwise
+  hard_invariants:
+  - id: exact_language_required
+    rule: Every surface must preserve exact observed language separately from interpretation.
+    enforcement: surface validation
+    status: implemented
+  - id: configured_channel_required
+    rule: A surface cannot be processed without a stored channel policy.
+    enforcement: policy lookup
+    status: implemented
+  - id: score_range
+    rule: Relevance, urgency, and conversation scores remain within 0..10.
+    enforcement: surface validation
+    status: implemented
+  - id: permission_gate
+    rule: When a policy requires a response, a high score cannot directly produce DM or call.
+    enforcement: deterministic decision order
+    status: implemented
+  - id: idempotent_surface
+    rule: The same external_id updates one current surface projection.
+    enforcement: SQLite primary key upsert
+    status: implemented
+  - id: no_automated_account_action
+    rule: The runtime produces recommendations and files only.
+    enforcement: no sending or connector module exists
+    status: implemented
+  evidence_strength_model:
+    default_ladder:
+    - attention
+    - reply
+    - qualified_conversation
+    - environment_access
+    - deployment
+    - repeat_usage
+    - internal_champion
+    - procurement_activity
+    - payment
+    - expansion_or_referral
+    rule: Lower evidence must not be represented as equivalent to later behavioral or economic commitment.
+    status: documented
+  known_semantic_limitations:
+  - limitation: thresholds_not_calibrated
+    meaning: Current thresholds are explicit defaults, not learned outcome-optimal policies.
+    status: documented
+  - limitation: surface_status_static
+    meaning: The current status remains queued; full action/outcome lifecycle is not implemented.
+    status: documented
+  - limitation: event_policy_version_absent
+    meaning: Decision events do not yet persist the complete policy version used.
+    status: documented
+workflows_interfaces_and_repository:
+  primary_operator_workflow:
+  - step: 1
+    command: signalops init --project <project.json> --channels <channel-directory> --db <path>
+    result: project and all channel policies persisted
+  - step: 2
+    command: signalops add-surface --channel <channel> --title <title> --url <url> --pain <text> --exact-language
+      <quote> --relevance <0..10> --urgency <0..10> --conversation <0..10> [--responded]
+    result: idempotent surface projection and explainable decision event
+  - step: 3
+    command: signalops next-actions [--channel <channel>] [--limit <n>]
+    result: ranked action queue
+  - step: 4
+    command: signalops render-brief --channel <channel> [--output <file>]
+    result: restartable channel-native operating brief
+  - step: 5
+    command: signalops handoff --channel <channel> --output <file>
+    result: session evidence, exact language, decisions, questions, and continuation point
+  - step: 6
+    command: signalops export-crm --output <file.csv>
+    result: portable shared CRM export
+  generic_project_application:
+  - copy examples/generic
+  - replace project identity and core problem
+  - define exact target users
+  - define evidence ladder and non-goals
+  - create one policy per actual surface
+  - set conservative reply, DM, and call thresholds
+  - run manual evidence-bearing surfaces through the CLI
+  - change thresholds only after outcome data exists
+  tracecrumb_example_structure:
+    project: examples/tracecrumb/project.json
+    policies: examples/tracecrumb/channels/*.json
+    playbooks: examples/tracecrumb/playbooks/*.md
+    purpose: demonstrate a complete domain application
+    framework_dependency: false
+  install_and_validation:
+    install: python -m pip install -e .
+    test: python -m unittest discover -s tests -v
+    smoke: python scripts/smoke_test.py
+    make_targets:
+    - make install
+    - make test
+    - make smoke
+    - make clean
+  repository_map:
+  - path: src/signalops/
+    purpose: runtime modules
+  - path: examples/generic/
+    purpose: domain-neutral starter
+  - path: examples/tracecrumb/
+    purpose: complete supplied application
+  - path: tests/
+    purpose: policy, permission, and idempotency tests
+  - path: docs/
+    purpose: RFC, architecture, evaluation, threats, failures, ADRs
+  - path: scripts/
+    purpose: reproducible smoke proof
+  - path: .github/
+    purpose: CI and contribution workflow
+  - path: spec/
+    purpose: canonical segmented YAML project specification
+  github_presentation:
+    default_branch: main
+    recommended_topics:
+    - developer-tools
+    - workflow-engine
+    - product-discovery
+    - policy-engine
+    - evidence
+    - sqlite
+    - local-first
+    - human-in-the-loop
+    read_order:
+    - README.md
+    - spec/00_project_identity.yaml
+    - docs/EMPLOYER_GUIDE.md
+    - docs/RFC.md
+    - src/signalops/scoring.py
+    - src/signalops/store.py
+    - tests/test_signalops.py
+roadmap_evaluation_and_metrics:
+  implementation_map:
+  - capability: project configuration
+    status: implemented
+  - capability: channel policy configuration
+    status: implemented
+  - capability: stable external ID generation
+    status: implemented
+  - capability: idempotent surface upsert
+    status: implemented
+  - capability: deterministic scoring and action trace
+    status: implemented
+  - capability: permission-aware DM/call gate
+    status: implemented
+  - capability: ranked next actions
+    status: implemented
+  - capability: brief and handoff rendering
+    status: implemented
+  - capability: CRM CSV export
+    status: implemented
+  - capability: action outcome lifecycle
+    status: planned
+  - capability: policy-version lineage
+    status: planned
+  - capability: automatic connectors
+    status: deferred
+  - capability: automatic message generation or sending
+    status: deferred
+  evolution_roadmap:
+    prototype:
+      objective: Persist one project, two policies, and one explainable decision.
+      exit_gate: A surface produces one reproducible action and event.
+      status: implemented
+    mvp:
+      objective: Run all relevant channels through real repeated sessions.
+      deliverables:
+      - action and outcome lifecycle
+      - policy version attached to decisions
+      - CRM import
+      - real session handoff corpus
+      - generic project bootstrap command
+      exit_gate: At least 100 real surfaces and 20 follow-up outcomes are recorded.
+      status: planned
+    production:
+      objective: Support secure shared operation.
+      deliverables:
+      - authentication and authorization
+      - data retention and redaction
+      - schema migrations
+      - backup and restore
+      - connector retry queues
+      - data-quality monitoring
+      - operational SLOs
+      exit_gate: Sensitive state, failures, recovery, and access are predictably operated.
+      status: planned
+    research_grade:
+      objective: Calibrate decision rules against later outcomes.
+      deliverables:
+      - human-review agreement dataset
+      - reply and conversation outcome labels
+      - false escalation analysis
+      - threshold sensitivity study
+      - channel-specific baseline comparison
+      exit_gate: Action policy changes are justified by reproducible outcome evidence.
+      status: planned
+    staff_engineer_quality:
+      objective: Demonstrate governance across projects, channels, operators, and privacy boundaries.
+      deliverables:
+      - policy ownership model
+      - cross-team rollout
+      - retention governance
+      - connector risk review
+      - multi-project architecture
+      - long-term cost model
+      exit_gate: A senior reviewer can evaluate policy governance and operating consequences.
+      status: planned
+  current_test_evidence:
+  - test: high-scoring Reddit surface without prior response remains public reply
+    type: permission
+    status: implemented
+  - test: repeated external ID updates one surface
+    type: idempotency
+    status: implemented
+  - test: low relevance overrides urgency and conversation
+    type: policy
+    status: implemented
+  - test: end-to-end init, decision, handoff, and CSV path
+    type: smoke
+    status: implemented
+  benchmark_design:
+    baseline: separate channel notes with no shared structured state
+    primary_metrics:
+    - duplicate_surface_rate
+    - handoff_completeness_rate
+    - session_resume_time_minutes
+    - decision_human_agreement_rate
+    - reply_to_conversation_conversion
+    - false_private_escalation_rate
+    - evidence_to_project_assumption_update_rate
+    falsification_condition: If structured policies and shared state do not reduce duplicate work, improve resumption,
+      or prevent inappropriate escalation, the framework must be simplified.
+    status: documented
+  system_metrics:
+  - surface_ingestion_latency_ms
+  - failed_validation_rate
+  - duplicate_upsert_rate
+  - handoff_render_latency_ms
+  - crm_export_success_rate
+  human_and_project_metrics:
+  - session_resume_time_minutes
+  - exact_language_capture_rate
+  - decision_override_rate
+  - reply_conversion_rate
+  - conversation_conversion_rate
+  - environment_access_rate
+  - deployment_signal_rate
+  - repeat_usage_signal_rate
+  - payment_signal_rate
+  - time_to_external_test_days
+reliability_security_and_operations:
+  failure_modes:
+  - failure: duplicate_surface
+    current_control: stable external_id and SQLite upsert
+    residual_risk: different URLs or titles for the same underlying discussion may evade deduplication
+    status: implemented
+  - failure: wrong_channel_policy
+    current_control: configured channel lookup
+    residual_risk: operator may classify a surface under the wrong configured channel
+    status: documented
+  - failure: weak_signal_overvaluation
+    current_control: relevance dominance and explicit evidence ladder
+    residual_risk: thresholds are not yet outcome-calibrated
+    status: partially_implemented
+  - failure: permission_violation
+    current_control: dm_requires_response gate
+    residual_risk: policy depends on accurate responded input
+    status: implemented
+  - failure: sensitive_data_entry
+    current_control: local storage and no connector
+    residual_risk: retention, redaction, and encryption are absent
+    status: planned
+  - failure: csv_formula_injection
+    current_control: none
+    residual_risk: spreadsheet execution risk on malicious leading characters
+    status: planned
+    next_control: escape formula-leading cells on export
+  - failure: database_loss
+    current_control: none beyond local filesystem
+    residual_risk: project and evidence history loss
+    status: planned
+    next_control: backup and restore commands
+  security_boundaries:
+    protected_assets:
+    - person and role context
+    - source URLs
+    - exact public language
+    - discovery notes
+    - project strategy
+    trust_boundaries:
+    - operator to CLI
+    - public source text to local record
+    - local runtime to SQLite
+    - CSV file to spreadsheet software
+    implemented_controls:
+    - no scraping module
+    - no sending module
+    - no private-data connector
+    - parameterized SQL
+    - explicit permission gate
+    - credentials excluded by gitignore
+    planned_controls:
+    - retention and deletion policy
+    - redaction workflow
+    - CSV formula escaping
+    - role-based authorization
+    - field-level sensitivity classification
+    - audit log for exports
+  ethical_and_human_boundaries:
+  - do not infer private incidents or sensitive company conditions
+  - do not mass-contact people
+  - do not treat a job title as evidence
+  - do not convert research authors into outreach targets by default
+  - do not bypass public permission with a high score
+  - do not represent passive interest as deployment or payment
+  operational_readiness:
+    current_mode: single_operator_local
+    logging: CLI output and SQLite decision events
+    metrics: not implemented
+    backups: not implemented
+    migrations: implicit create-if-missing schema only
+    recovery: transaction rollback; manual database replacement
+    slo: not yet defined
+  proposed_slos:
+  - name: surface_persistence
+    target: 99.9% valid manual imports persist with one decision event
+    status: planned
+  - name: handoff_generation
+    target: 99.9% stored channel state renders into a handoff
+    status: planned
+portfolio_and_employer_signal:
+  portfolio_positioning: A compact evidence-operations platform showing the ability to preserve channel-native behavior
+    without fragmenting state, provenance, decisions, or handoffs.
+  hidden_competencies:
+  - workflow and policy design
+  - durable data modeling
+  - idempotency
+  - source provenance
+  - human-computer interaction
+  - privacy and consent boundaries
+  - evaluation design
+  - architectural restraint
+  inspectable_artifacts:
+  - README
+  - RFC
+  - architecture document
+  - ADRs
+  - threat model
+  - failure analysis
+  - evaluation plan
+  - TraceCrumb configuration
+  - generic starter
+  - channel playbooks
+  - tests
+  - smoke script
+  - GitHub Actions
+  - segmented YAML specification
+  employer_review_questions:
+  - Why are channel policies configuration rather than isolated code paths?
+  - How does the permission gate interact with score thresholds?
+  - How would policy versioning preserve historical reproducibility?
+  - What data would justify changing the weights?
+  - Where would connectors introduce privacy or reliability risk?
+  credible_claims_now:
+  - installable CLI
+  - shared project and channel policy state
+  - stable external IDs and idempotent upsert
+  - deterministic explainable decisions
+  - permission-aware escalation
+  - brief, handoff, and CRM generation
+  - generic and TraceCrumb configurations
+  - passing unit and smoke tests
+  claims_requiring_future_evidence:
+  - higher reply conversion
+  - faster discovery
+  - better project decisions
+  - reduced session restart cost
+  - production-safe multi-user operation
+  resume_bullet_templates:
+  - Built a policy-driven evidence operations workbench that preserved channel-specific norms while unifying provenance,
+    action decisions, handoffs, and CRM state.
+  - Implemented deterministic consent-aware escalation and idempotent surface ingestion with inspectable decision
+    traces and portable handoff outputs.
+  next_highest_leverage_work:
+  - record action and outcome lifecycle
+  - attach policy versions to each decision
+  - process 100 real surfaces
+  - measure decision overrides and conversion
+  - publish one project-agnostic case study

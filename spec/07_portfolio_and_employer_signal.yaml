@@ -1,0 +1,74 @@
+# 07 Portfolio And Employer Signal
+# Canonical project specification. Update this file when implementation reality changes.
+# Capability statuses: implemented | partially_implemented | documented | planned | deferred.
+
+schema:
+  name: project_engineering_specification
+  version: 1.0.0
+  generated_on: '2026-07-22'
+  timezone: Asia/Qatar
+  status_vocabulary:
+  - implemented
+  - partially_implemented
+  - documented
+  - planned
+  - deferred
+portfolio_and_employer_signal:
+  portfolio_positioning: A compact evidence-operations platform showing the ability to preserve channel-native behavior
+    without fragmenting state, provenance, decisions, or handoffs.
+  hidden_competencies:
+  - workflow and policy design
+  - durable data modeling
+  - idempotency
+  - source provenance
+  - human-computer interaction
+  - privacy and consent boundaries
+  - evaluation design
+  - architectural restraint
+  inspectable_artifacts:
+  - README
+  - RFC
+  - architecture document
+  - ADRs
+  - threat model
+  - failure analysis
+  - evaluation plan
+  - TraceCrumb configuration
+  - generic starter
+  - channel playbooks
+  - tests
+  - smoke script
+  - GitHub Actions
+  - segmented YAML specification
+  employer_review_questions:
+  - Why are channel policies configuration rather than isolated code paths?
+  - How does the permission gate interact with score thresholds?
+  - How would policy versioning preserve historical reproducibility?
+  - What data would justify changing the weights?
+  - Where would connectors introduce privacy or reliability risk?
+  credible_claims_now:
+  - installable CLI
+  - shared project and channel policy state
+  - stable external IDs and idempotent upsert
+  - deterministic explainable decisions
+  - permission-aware escalation
+  - brief, handoff, and CRM generation
+  - generic and TraceCrumb configurations
+  - passing unit and smoke tests
+  claims_requiring_future_evidence:
+  - higher reply conversion
+  - faster discovery
+  - better project decisions
+  - reduced session restart cost
+  - production-safe multi-user operation
+  resume_bullet_templates:
+  - Built a policy-driven evidence operations workbench that preserved channel-specific norms while unifying provenance,
+    action decisions, handoffs, and CRM state.
+  - Implemented deterministic consent-aware escalation and idempotent surface ingestion with inspectable decision
+    traces and portable handoff outputs.
+  next_highest_leverage_work:
+  - record action and outcome lifecycle
+  - attach policy versions to each decision
+  - process 100 real surfaces
+  - measure decision overrides and conversion
+  - publish one project-agnostic case study

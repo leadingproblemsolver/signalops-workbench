@@ -1,0 +1,138 @@
+# 03 State Contracts And Invariants
+# Canonical project specification. Update this file when implementation reality changes.
+# Capability statuses: implemented | partially_implemented | documented | planned | deferred.
+
+schema:
+  name: project_engineering_specification
+  version: 1.0.0
+  generated_on: '2026-07-22'
+  timezone: Asia/Qatar
+  status_vocabulary:
+  - implemented
+  - partially_implemented
+  - documented
+  - planned
+  - deferred
+state_contracts_and_invariants:
+  entities:
+    project:
+      fields:
+      - project_id
+      - name
+      - current_stage
+      - core_problem
+      - target_users
+      - strong_evidence
+      - non_goals
+      - evidence_ladder
+    policy:
+      fields:
+      - channel
+      - purpose
+      - tone
+      - allowed
+      - forbidden
+      - strong_signals
+      - weak_signals
+      - reply_threshold
+      - dm_threshold
+      - call_threshold
+      - dm_requires_response
+      - output_sections
+    surface:
+      fields:
+      - external_id
+      - channel
+      - title
+      - url
+      - who
+      - pain
+      - exact_language
+      - relevance
+      - urgency
+      - conversation
+      - responded
+    decision:
+      fields:
+      - action
+      - score
+      - reason
+      - trace
+    event:
+      fields:
+      - id
+      - entity_id
+      - type
+      - payload
+      - occurred_at
+      event_types:
+      - project_configured
+      - policy_configured
+      - surface_scored
+  action_model:
+    actions:
+    - ignore
+    - save
+    - public_reply
+    - dm
+    - call
+    composite_score:
+      formula: 0.50 * relevance + 0.30 * conversation + 0.20 * urgency
+      range: 0..10
+      reasoning: Relevance dominates because activity on the wrong problem surface remains waste.
+    decision_order:
+    - ignore when relevance < 4
+    - call when score >= call_threshold and prior response exists
+    - dm when score >= dm_threshold and policy permission allows it
+    - public_reply when DM threshold is met but response permission is absent
+    - public_reply when score >= reply_threshold
+    - save otherwise
+  hard_invariants:
+  - id: exact_language_required
+    rule: Every surface must preserve exact observed language separately from interpretation.
+    enforcement: surface validation
+    status: implemented
+  - id: configured_channel_required
+    rule: A surface cannot be processed without a stored channel policy.
+    enforcement: policy lookup
+    status: implemented
+  - id: score_range
+    rule: Relevance, urgency, and conversation scores remain within 0..10.
+    enforcement: surface validation
+    status: implemented
+  - id: permission_gate
+    rule: When a policy requires a response, a high score cannot directly produce DM or call.
+    enforcement: deterministic decision order
+    status: implemented
+  - id: idempotent_surface
+    rule: The same external_id updates one current surface projection.
+    enforcement: SQLite primary key upsert
+    status: implemented
+  - id: no_automated_account_action
+    rule: The runtime produces recommendations and files only.
+    enforcement: no sending or connector module exists
+    status: implemented
+  evidence_strength_model:
+    default_ladder:
+    - attention
+    - reply
+    - qualified_conversation
+    - environment_access
+    - deployment
+    - repeat_usage
+    - internal_champion
+    - procurement_activity
+    - payment
+    - expansion_or_referral
+    rule: Lower evidence must not be represented as equivalent to later behavioral or economic commitment.
+    status: documented
+  known_semantic_limitations:
+  - limitation: thresholds_not_calibrated
+    meaning: Current thresholds are explicit defaults, not learned outcome-optimal policies.
+    status: documented
+  - limitation: surface_status_static
+    meaning: The current status remains queued; full action/outcome lifecycle is not implemented.
+    status: documented
+  - limitation: event_policy_version_absent
+    meaning: Decision events do not yet persist the complete policy version used.
+    status: documented

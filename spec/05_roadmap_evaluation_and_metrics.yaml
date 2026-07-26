@@ -1,0 +1,134 @@
+# 05 Roadmap Evaluation And Metrics
+# Canonical project specification. Update this file when implementation reality changes.
+# Capability statuses: implemented | partially_implemented | documented | planned | deferred.
+
+schema:
+  name: project_engineering_specification
+  version: 1.0.0
+  generated_on: '2026-07-22'
+  timezone: Asia/Qatar
+  status_vocabulary:
+  - implemented
+  - partially_implemented
+  - documented
+  - planned
+  - deferred
+roadmap_evaluation_and_metrics:
+  implementation_map:
+  - capability: project configuration
+    status: implemented
+  - capability: channel policy configuration
+    status: implemented
+  - capability: stable external ID generation
+    status: implemented
+  - capability: idempotent surface upsert
+    status: implemented
+  - capability: deterministic scoring and action trace
+    status: implemented
+  - capability: permission-aware DM/call gate
+    status: implemented
+  - capability: ranked next actions
+    status: implemented
+  - capability: brief and handoff rendering
+    status: implemented
+  - capability: CRM CSV export
+    status: implemented
+  - capability: action outcome lifecycle
+    status: planned
+  - capability: policy-version lineage
+    status: planned
+  - capability: automatic connectors
+    status: deferred
+  - capability: automatic message generation or sending
+    status: deferred
+  evolution_roadmap:
+    prototype:
+      objective: Persist one project, two policies, and one explainable decision.
+      exit_gate: A surface produces one reproducible action and event.
+      status: implemented
+    mvp:
+      objective: Run all relevant channels through real repeated sessions.
+      deliverables:
+      - action and outcome lifecycle
+      - policy version attached to decisions
+      - CRM import
+      - real session handoff corpus
+      - generic project bootstrap command
+      exit_gate: At least 100 real surfaces and 20 follow-up outcomes are recorded.
+      status: planned
+    production:
+      objective: Support secure shared operation.
+      deliverables:
+      - authentication and authorization
+      - data retention and redaction
+      - schema migrations
+      - backup and restore
+      - connector retry queues
+      - data-quality monitoring
+      - operational SLOs
+      exit_gate: Sensitive state, failures, recovery, and access are predictably operated.
+      status: planned
+    research_grade:
+      objective: Calibrate decision rules against later outcomes.
+      deliverables:
+      - human-review agreement dataset
+      - reply and conversation outcome labels
+      - false escalation analysis
+      - threshold sensitivity study
+      - channel-specific baseline comparison
+      exit_gate: Action policy changes are justified by reproducible outcome evidence.
+      status: planned
+    staff_engineer_quality:
+      objective: Demonstrate governance across projects, channels, operators, and privacy boundaries.
+      deliverables:
+      - policy ownership model
+      - cross-team rollout
+      - retention governance
+      - connector risk review
+      - multi-project architecture
+      - long-term cost model
+      exit_gate: A senior reviewer can evaluate policy governance and operating consequences.
+      status: planned
+  current_test_evidence:
+  - test: high-scoring Reddit surface without prior response remains public reply
+    type: permission
+    status: implemented
+  - test: repeated external ID updates one surface
+    type: idempotency
+    status: implemented
+  - test: low relevance overrides urgency and conversation
+    type: policy
+    status: implemented
+  - test: end-to-end init, decision, handoff, and CSV path
+    type: smoke
+    status: implemented
+  benchmark_design:
+    baseline: separate channel notes with no shared structured state
+    primary_metrics:
+    - duplicate_surface_rate
+    - handoff_completeness_rate
+    - session_resume_time_minutes
+    - decision_human_agreement_rate
+    - reply_to_conversation_conversion
+    - false_private_escalation_rate
+    - evidence_to_project_assumption_update_rate
+    falsification_condition: If structured policies and shared state do not reduce duplicate work, improve resumption,
+      or prevent inappropriate escalation, the framework must be simplified.
+    status: documented
+  system_metrics:
+  - surface_ingestion_latency_ms
+  - failed_validation_rate
+  - duplicate_upsert_rate
+  - handoff_render_latency_ms
+  - crm_export_success_rate
+  human_and_project_metrics:
+  - session_resume_time_minutes
+  - exact_language_capture_rate
+  - decision_override_rate
+  - reply_conversion_rate
+  - conversation_conversion_rate
+  - environment_access_rate
+  - deployment_signal_rate
+  - repeat_usage_signal_rate
+  - payment_signal_rate
+  - time_to_external_test_days

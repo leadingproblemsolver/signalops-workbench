@@ -1,0 +1,89 @@
+# 02 System Architecture
+# Canonical project specification. Update this file when implementation reality changes.
+# Capability statuses: implemented | partially_implemented | documented | planned | deferred.
+
+schema:
+  name: project_engineering_specification
+  version: 1.0.0
+  generated_on: '2026-07-22'
+  timezone: Asia/Qatar
+  status_vocabulary:
+  - implemented
+  - partially_implemented
+  - documented
+  - planned
+  - deferred
+system_architecture:
+  architecture_style: modular_monolith
+  deployment_mode: local_first_cli
+  authoritative_path:
+  - project_configuration
+  - channel_policy
+  - evidence_surface
+  - deterministic_scoring
+  - policy_and_permission_gate
+  - sqlite_transaction
+  - surface_projection
+  - decision_event
+  output_path:
+  - shared_project_state
+  - ranked_next_actions
+  - channel_execution_brief
+  - session_handoff
+  - crm_csv
+  source_of_truth:
+    project: SQLite projects table
+    channel_policies: SQLite policies table
+    surface_current_state: SQLite surfaces table
+    decision_history: SQLite events table
+    configuration_sources: project and channel JSON files
+  consistency_model:
+    local_writes: ACID transaction
+    duplicate_surface_behavior: upsert by stable external_id
+    decision_and_surface_update: same transaction
+    remote_consistency: not implemented
+  technology:
+    language: Python 3.11+
+    database: SQLite
+    packaging: setuptools via pyproject.toml
+    testing: unittest
+    ci: GitHub Actions
+    external_runtime_dependencies: []
+  components:
+  - name: domain_models
+    path: src/signalops/models.py
+    responsibility: project, policy, and surface contracts
+    status: implemented
+  - name: decision_engine
+    path: src/signalops/scoring.py
+    responsibility: composite score, permission gates, explainable action decision
+    status: implemented
+  - name: application_engine
+    path: src/signalops/engine.py
+    responsibility: stable external ID and processing orchestration
+    status: implemented
+  - name: persistence_store
+    path: src/signalops/store.py
+    responsibility: transactions, idempotent upsert, project/policy state, events
+    status: implemented
+  - name: rendering
+    path: src/signalops/render.py
+    responsibility: channel brief, handoff, and CSV output
+    status: implemented
+  - name: cli
+    path: src/signalops/cli.py
+    responsibility: operator interface and composition root
+    status: implemented
+  deferred_architecture:
+  - capability: PostgreSQL
+    trigger: shared remote operation or concurrent team members
+    status: deferred
+  - capability: connector_workers
+    trigger: manual import becomes the dominant bottleneck and platform terms permit automation
+    status: deferred
+  - capability: generative_response_assistance
+    trigger: evidence and policy record exist before generation and evaluation is defined
+    status: deferred
+  - capability: multi_project_portfolio_analytics
+    trigger: several projects produce enough comparable outcome data
+    status: deferred

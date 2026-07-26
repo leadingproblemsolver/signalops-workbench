@@ -1,0 +1,66 @@
+# 00 Project Identity
+# Canonical project specification. Update this file when implementation reality changes.
+# Capability statuses: implemented | partially_implemented | documented | planned | deferred.
+
+schema:
+  name: project_engineering_specification
+  version: 1.0.0
+  generated_on: '2026-07-22'
+  timezone: Asia/Qatar
+  status_vocabulary:
+  - implemented
+  - partially_implemented
+  - documented
+  - planned
+  - deferred
+project_identity:
+  id: signalops_workbench
+  name: SignalOps Workbench
+  repository: signalops-workbench
+  package: signalops-workbench
+  python_module: signalops
+  cli: signalops
+  version: 0.1.0
+  current_stage: installable_vertical_slice
+  project_type:
+  - developer_tooling
+  - evidence_operations
+  - workflow_policy_engine
+  - market_validation_infrastructure
+  one_liner: A policy-driven workbench that converts channel-native public evidence into durable decisions, handoffs,
+    and qualified next actions.
+  system_thesis: Channels require distinct norms, but evidence, decision history, and continuation state must remain
+    unified.
+  primary_users:
+  - technical founders
+  - developer-tooling researchers
+  - product discovery operators
+  - engineering teams validating workflow problems
+  primary_use_cases:
+  - configure one target project
+  - preserve channel-specific rules
+  - ingest evidence-bearing surfaces
+  - score relevance and actionability deterministically
+  - enforce public/private permission boundaries
+  - render restartable channel briefs
+  - produce session handoffs and CRM exports
+  direct_project_benefit:
+    improves_core_user_result: true
+    removes_current_blocker: true
+    reduces_operational_risk: true
+    creates_external_proof: true
+    accelerates_validation: true
+    creates_reusable_infrastructure: true
+    explanation: The repository operationalizes the supplied command-center, separate-channel, shared-CRM, and handoff
+      structure without binding the engine to incident response.
+  example_domain:
+    name: TraceCrumb
+    role: complete configuration and playbook example
+    framework_dependency: false
+    incident_relevance: example_content_only
+  source_artifacts:
+  - docs/reference/structure-context.md
+  - examples/tracecrumb/project.json
+  - examples/tracecrumb/channels/
+  - examples/tracecrumb/playbooks/
+  - examples/generic/

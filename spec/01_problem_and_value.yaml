@@ -1,0 +1,84 @@
+# 01 Problem And Value
+# Canonical project specification. Update this file when implementation reality changes.
+# Capability statuses: implemented | partially_implemented | documented | planned | deferred.
+
+schema:
+  name: project_engineering_specification
+  version: 1.0.0
+  generated_on: '2026-07-22'
+  timezone: Asia/Qatar
+  status_vocabulary:
+  - implemented
+  - partially_implemented
+  - documented
+  - planned
+  - deferred
+problem_and_value:
+  surface_problem: Project evidence, outreach decisions, and follow-up state become fragmented across channels and
+    sessions.
+  hidden_engineering_problem: Support heterogeneous channel policies over shared durable evidence while preserving
+    provenance, permission, idempotency, decision traceability, and resumable handoffs.
+  failure_if_unsolved:
+  - channel norms collapse into generic messaging
+  - the same surface is logged repeatedly
+  - exact user language is replaced by interpretation
+  - weak interest is mistaken for strong evidence
+  - private contact occurs without permission
+  - each session restarts without accumulated state
+  - project decisions cannot be traced to observed evidence
+  why_difficult:
+  - concern: heterogeneous_policy
+    difficulty: Each channel has distinct norms, thresholds, and acceptable next actions.
+  - concern: shared_state
+    difficulty: Channel separation must not fragment project truth or CRM continuity.
+  - concern: provenance
+    difficulty: Exact language, source URL, interpretation, and action must remain distinguishable.
+  - concern: permission
+    difficulty: A high score must not bypass channel-specific consent requirements.
+  - concern: idempotency
+    difficulty: Repeated processing should update one surface rather than inflate evidence.
+  - concern: evaluation
+    difficulty: Action thresholds must eventually be calibrated against later outcomes, not intuition.
+  value_created:
+    immediate:
+    - one shared source of truth
+    - channel-native decision rules
+    - reproducible handoffs
+    - ranked next actions
+    reusable:
+    - generic project schema
+    - policy schema
+    - surface evidence model
+    - decision engine
+    - brief and handoff renderer
+    portfolio:
+    - workflow architecture
+    - policy engines
+    - provenance
+    - human factors
+    - privacy boundaries
+    - measurement discipline
+  explicit_non_goals:
+  - web scraping
+  - account automation
+  - mass outreach
+  - automatic message sending
+  - private-data inference
+  - generic copy generation
+  - autonomous product decisions
+  - incident intelligence as a required module
+  scope_boundary:
+    in_scope:
+    - local project and channel configuration
+    - manual evidence-bearing surface ingestion
+    - deterministic score and action selection
+    - permission-aware escalation
+    - brief, handoff, and CRM output
+    - TraceCrumb and generic examples
+    out_of_scope_until_evidence:
+    - remote connectors
+    - email or social account actions
+    - multi-user authorization
+    - automatic outcome tracking
+    - model-generated responses
+    - cross-project analytics

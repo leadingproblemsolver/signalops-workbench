@@ -1,0 +1,95 @@
+# 06 Reliability Security And Operations
+# Canonical project specification. Update this file when implementation reality changes.
+# Capability statuses: implemented | partially_implemented | documented | planned | deferred.
+
+schema:
+  name: project_engineering_specification
+  version: 1.0.0
+  generated_on: '2026-07-22'
+  timezone: Asia/Qatar
+  status_vocabulary:
+  - implemented
+  - partially_implemented
+  - documented
+  - planned
+  - deferred
+reliability_security_and_operations:
+  failure_modes:
+  - failure: duplicate_surface
+    current_control: stable external_id and SQLite upsert
+    residual_risk: different URLs or titles for the same underlying discussion may evade deduplication
+    status: implemented
+  - failure: wrong_channel_policy
+    current_control: configured channel lookup
+    residual_risk: operator may classify a surface under the wrong configured channel
+    status: documented
+  - failure: weak_signal_overvaluation
+    current_control: relevance dominance and explicit evidence ladder
+    residual_risk: thresholds are not yet outcome-calibrated
+    status: partially_implemented
+  - failure: permission_violation
+    current_control: dm_requires_response gate
+    residual_risk: policy depends on accurate responded input
+    status: implemented
+  - failure: sensitive_data_entry
+    current_control: local storage and no connector
+    residual_risk: retention, redaction, and encryption are absent
+    status: planned
+  - failure: csv_formula_injection
+    current_control: none
+    residual_risk: spreadsheet execution risk on malicious leading characters
+    status: planned
+    next_control: escape formula-leading cells on export
+  - failure: database_loss
+    current_control: none beyond local filesystem
+    residual_risk: project and evidence history loss
+    status: planned
+    next_control: backup and restore commands
+  security_boundaries:
+    protected_assets:
+    - person and role context
+    - source URLs
+    - exact public language
+    - discovery notes
+    - project strategy
+    trust_boundaries:
+    - operator to CLI
+    - public source text to local record
+    - local runtime to SQLite
+    - CSV file to spreadsheet software
+    implemented_controls:
+    - no scraping module
+    - no sending module
+    - no private-data connector
+    - parameterized SQL
+    - explicit permission gate
+    - credentials excluded by gitignore
+    planned_controls:
+    - retention and deletion policy
+    - redaction workflow
+    - CSV formula escaping
+    - role-based authorization
+    - field-level sensitivity classification
+    - audit log for exports
+  ethical_and_human_boundaries:
+  - do not infer private incidents or sensitive company conditions
+  - do not mass-contact people
+  - do not treat a job title as evidence
+  - do not convert research authors into outreach targets by default
+  - do not bypass public permission with a high score
+  - do not represent passive interest as deployment or payment
+  operational_readiness:
+    current_mode: single_operator_local
+    logging: CLI output and SQLite decision events
+    metrics: not implemented
+    backups: not implemented
+    migrations: implicit create-if-missing schema only
+    recovery: transaction rollback; manual database replacement
+    slo: not yet defined
+  proposed_slos:
+  - name: surface_persistence
+    target: 99.9% valid manual imports persist with one decision event
+    status: planned
+  - name: handoff_generation
+    target: 99.9% stored channel state renders into a handoff
+    status: planned

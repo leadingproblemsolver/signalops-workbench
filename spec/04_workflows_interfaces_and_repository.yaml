@@ -1,0 +1,96 @@
+# 04 Workflows Interfaces And Repository
+# Canonical project specification. Update this file when implementation reality changes.
+# Capability statuses: implemented | partially_implemented | documented | planned | deferred.
+
+schema:
+  name: project_engineering_specification
+  version: 1.0.0
+  generated_on: '2026-07-22'
+  timezone: Asia/Qatar
+  status_vocabulary:
+  - implemented
+  - partially_implemented
+  - documented
+  - planned
+  - deferred
+workflows_interfaces_and_repository:
+  primary_operator_workflow:
+  - step: 1
+    command: signalops init --project <project.json> --channels <channel-directory> --db <path>
+    result: project and all channel policies persisted
+  - step: 2
+    command: signalops add-surface --channel <channel> --title <title> --url <url> --pain <text> --exact-language
+      <quote> --relevance <0..10> --urgency <0..10> --conversation <0..10> [--responded]
+    result: idempotent surface projection and explainable decision event
+  - step: 3
+    command: signalops next-actions [--channel <channel>] [--limit <n>]
+    result: ranked action queue
+  - step: 4
+    command: signalops render-brief --channel <channel> [--output <file>]
+    result: restartable channel-native operating brief
+  - step: 5
+    command: signalops handoff --channel <channel> --output <file>
+    result: session evidence, exact language, decisions, questions, and continuation point
+  - step: 6
+    command: signalops export-crm --output <file.csv>
+    result: portable shared CRM export
+  generic_project_application:
+  - copy examples/generic
+  - replace project identity and core problem
+  - define exact target users
+  - define evidence ladder and non-goals
+  - create one policy per actual surface
+  - set conservative reply, DM, and call thresholds
+  - run manual evidence-bearing surfaces through the CLI
+  - change thresholds only after outcome data exists
+  tracecrumb_example_structure:
+    project: examples/tracecrumb/project.json
+    policies: examples/tracecrumb/channels/*.json
+    playbooks: examples/tracecrumb/playbooks/*.md
+    purpose: demonstrate a complete domain application
+    framework_dependency: false
+  install_and_validation:
+    install: python -m pip install -e .
+    test: python -m unittest discover -s tests -v
+    smoke: python scripts/smoke_test.py
+    make_targets:
+    - make install
+    - make test
+    - make smoke
+    - make clean
+  repository_map:
+  - path: src/signalops/
+    purpose: runtime modules
+  - path: examples/generic/
+    purpose: domain-neutral starter
+  - path: examples/tracecrumb/
+    purpose: complete supplied application
+  - path: tests/
+    purpose: policy, permission, and idempotency tests
+  - path: docs/
+    purpose: RFC, architecture, evaluation, threats, failures, ADRs
+  - path: scripts/
+    purpose: reproducible smoke proof
+  - path: .github/
+    purpose: CI and contribution workflow
+  - path: spec/
+    purpose: canonical segmented YAML project specification
+  github_presentation:
+    default_branch: main
+    recommended_topics:
+    - developer-tools
+    - workflow-engine
+    - product-discovery
+    - policy-engine
+    - evidence
+    - sqlite
+    - local-first
+    - human-in-the-loop
+    read_order:
+    - README.md
+    - spec/00_project_identity.yaml
+    - docs/EMPLOYER_GUIDE.md
+    - docs/RFC.md
+    - src/signalops/scoring.py
+    - src/signalops/store.py
+    - tests/test_signalops.py

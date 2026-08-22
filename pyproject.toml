@@ -4,13 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "signalops-workbench"
-version = "1.0.0"
+version = "1.1.0"
 description = "Deterministic, permission-safe evidence prioritization and durable handoffs."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [{ name = "Portfolio Project" }]
-keywords = ["workflow", "policy-engine", "provenance", "sqlite", "decision-support"]
+dependencies = [
+  "fastapi>=0.116,<1",
+  "uvicorn[standard]>=0.35,<1",
+]
+keywords = ["workflow", "policy-engine", "provenance", "sqlite", "decision-support", "gtm"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "License :: OSI Approved :: MIT License",
@@ -22,6 +26,7 @@ classifiers = [
 
 [project.scripts]
 signalops = "signalops.cli:main"
+signalops-web = "signalops.web:run"
 
 [tool.setuptools]
 package-dir = { "" = "src" }

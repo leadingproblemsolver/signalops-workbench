@@ -26,7 +26,6 @@ dependencies = [
 
 [project.scripts]
 signalops = "signalops.cli:main"
-signalops-web = "signalops.web:app"
 
 [tool.setuptools]
 package-dir = { "" = "src" }

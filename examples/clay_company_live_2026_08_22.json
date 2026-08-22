@@ -1,0 +1,72 @@
+{
+  "run_date": "2026-08-22",
+  "source": "Clay connected search + enrichment",
+  "claim_boundary": "Public company search/enrichment receipt only. No outreach, reply, meeting, pipeline or revenue claim.",
+  "search": {
+    "industry": "Software Development",
+    "company_sizes": ["2-10", "11-50"],
+    "description_keywords": ["developer tools", "AI"]
+  },
+  "selected_entities": [
+    {
+      "name": "Halr",
+      "domain": "halrtech.com",
+      "size": "11-50 employees",
+      "country": "United Kingdom",
+      "description_excerpt": "Halr is a London-based technology company founded in 2024, specializing in AI-driven business development solutions.",
+      "enrichment_states": {
+        "Tech Stack": "completed",
+        "Open Jobs": "completed",
+        "Recent News": "in-progress"
+      },
+      "tech_stack_observed_subset": [
+        "HighLevel",
+        "LeadConnector",
+        "Calendly",
+        "Slack",
+        "Nuxt.js",
+        "Vue",
+        "Cloudflare CDN"
+      ],
+      "open_jobs": "No results found."
+    },
+    {
+      "name": "Soul AI",
+      "domain": "soulhq.ai",
+      "size": "11-50 employees",
+      "country": "United States",
+      "description_excerpt": "We are a global network of professionals who help leading Al labs and enterprises build accurate and reliable Al systems.",
+      "enrichment_states": {
+        "Tech Stack": "completed",
+        "Open Jobs": "completed",
+        "Recent News": "in-progress"
+      },
+      "tech_stack_observed_subset": [
+        "Vercel",
+        "Amazon S3",
+        "AWS Lambda",
+        "Apollo GraphQL",
+        "Next.js",
+        "React",
+        "Material UI",
+        "Sentry",
+        "OpenTelemetry",
+        "Hubspot Webflow"
+      ],
+      "open_jobs": "No results found."
+    },
+    {
+      "name": "Notchup",
+      "domain": "notchup.com",
+      "size": "11-50 employees",
+      "country": "United States",
+      "description_excerpt": "Notchup is the AI Chief of Staff for modern technology teams.",
+      "enrichment_states": {
+        "Tech Stack": "in-progress",
+        "Open Jobs": "completed",
+        "Recent News": "in-progress"
+      },
+      "open_jobs": "No results found."
+    }
+  ]
+}

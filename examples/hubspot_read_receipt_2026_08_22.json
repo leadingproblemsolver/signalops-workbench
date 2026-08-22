@@ -1,0 +1,19 @@
+{
+  "run_date": "2026-08-22",
+  "source": "Connected HubSpot portal read",
+  "claim_boundary": "Read-path proof only. Company/contact/deal write access currently requires connector reauthorization; no CRM mutation was performed.",
+  "availability": {
+    "COMPANY_read": "AVAILABLE",
+    "COMPANY_write": "REQUIRES_REAUTHORIZATION",
+    "CONTACT_read": "AVAILABLE",
+    "CONTACT_write": "REQUIRES_REAUTHORIZATION",
+    "DEAL_read": "AVAILABLE",
+    "DEAL_write": "REQUIRES_REAUTHORIZATION"
+  },
+  "sample_company_read": {
+    "name": "HubSpot",
+    "domain": "hubspot.com",
+    "website": "hubspot.com"
+  },
+  "result_count": 1
+}

@@ -1,0 +1,14 @@
+{
+  "task_id": "task_001_atomic_process",
+  "invariant": "surface projection and immutable event receipt commit atomically",
+  "required_checks": [
+    "normal_create",
+    "normal_update",
+    "failed_create_rolls_back_projection",
+    "failed_update_restores_previous_projection"
+  ],
+  "calibration": {
+    "known_bad_score": 50,
+    "reference_score": 100
+  }
+}

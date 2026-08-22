@@ -74,9 +74,120 @@ class ClayJob:
         )
 
 
+@dataclass(frozen=True, slots=True)
+class ClayCompanySignal:
+    """A bounded company-level Clay enrichment receipt.
+
+    Only completed enrichment values are carried forward. In-progress/error states remain
+    explicit in enrichment_states so SignalOps never turns missing enrichment into a fact.
+    """
+
+    company: str
+    domain: str
+    url: str
+    description: str
+    size: str = ""
+    country: str = ""
+    industry: str = ""
+    tech_stack: str = ""
+    open_jobs: str = ""
+    recent_news: str = ""
+    enrichment_states: tuple[tuple[str, str], ...] = ()
+
+    @classmethod
+    def from_mapping(cls, data: Mapping[str, Any]) -> "ClayCompanySignal":
+        company = str(data.get("name") or data.get("company") or "").strip()
+        domain = str(data.get("domain") or "").strip()
+        url = str(data.get("url") or "").strip()
+        description = str(data.get("description") or "").strip()
+        if not company or not url or not description:
+            raise ValidationError("Clay company requires name, url, and description")
+
+        values, states = _company_enrichments(data.get("enrichments"))
+        return cls(
+            company=company,
+            domain=domain,
+            url=url,
+            description=description,
+            size=str(data.get("size") or "").strip(),
+            country=str(data.get("country") or "").strip(),
+            industry=str(data.get("industry") or "").strip(),
+            tech_stack=values.get("Tech Stack", ""),
+            open_jobs=values.get("Open Jobs", ""),
+            recent_news=values.get("Recent News", ""),
+            enrichment_states=tuple(sorted(states.items())),
+        )
+
+    @property
+    def provenance_id(self) -> str:
+        identity = self.domain or self.url
+        return sha256(f"clay|company|{identity}".encode("utf-8")).hexdigest()[:24]
+
+    def evidence_text(self) -> str:
+        parts = [self.description]
+        if self.tech_stack:
+            parts.append(f"Tech Stack: {self.tech_stack}")
+        if self.open_jobs:
+            parts.append(f"Open Jobs: {self.open_jobs}")
+        if self.recent_news:
+            parts.append(f"Recent News: {self.recent_news}")
+        return "\n\n".join(parts)
+
+    def to_surface(
+        self,
+        *,
+        relevance: float,
+        urgency: float,
+        conversation: float,
+        decision_context: str,
+    ) -> Surface:
+        return Surface(
+            channel="clay",
+            title=f"{self.company} — company signal",
+            url=self.url,
+            who=self.company,
+            pain=decision_context,
+            exact_language=self.evidence_text(),
+            relevance=relevance,
+            urgency=urgency,
+            conversation=conversation,
+            external_id=self.provenance_id,
+        )
+
+
+def _company_enrichments(raw: Any) -> tuple[dict[str, str], dict[str, str]]:
+    values: dict[str, str] = {}
+    states: dict[str, str] = {}
+
+    if isinstance(raw, Mapping):
+        items = raw.values()
+    elif isinstance(raw, Sequence) and not isinstance(raw, (str, bytes, bytearray)):
+        items = raw
+    else:
+        items = ()
+
+    for item in items:
+        if not isinstance(item, Mapping):
+            continue
+        name = str(item.get("name") or "").strip()
+        state = str(item.get("state") or "unknown").strip().lower()
+        if not name:
+            continue
+        states[name] = state
+        value = item.get("value")
+        if state == "completed" and value not in (None, ""):
+            values[name] = str(value).strip()
+    return values, states
+
+
 def normalize_clay_jobs(payload: Sequence[Mapping[str, Any]]) -> list[ClayJob]:
     """Normalize a bounded batch while preserving input order."""
     return [ClayJob.from_mapping(item) for item in payload]
+
+
+def normalize_clay_companies(payload: Sequence[Mapping[str, Any]]) -> list[ClayCompanySignal]:
+    """Normalize company search/enrichment results while preserving input order."""
+    return [ClayCompanySignal.from_mapping(item) for item in payload]
 
 
 def incremental_enrichment_decision(

@@ -26,7 +26,7 @@ classifiers = [
 
 [project.scripts]
 signalops = "signalops.cli:main"
-signalops-web = "signalops.web:run"
+signalops-web = "signalops.web_runner:run"
 
 [tool.setuptools]
 package-dir = { "" = "src" }

@@ -1,0 +1,17 @@
+FROM python:3.13-slim
+
+WORKDIR /app
+COPY pyproject.toml README.md LICENSE ./
+COPY src ./src
+RUN python -m pip install --no-cache-dir .
+
+RUN useradd --create-home --uid 10001 signalops \
+    && mkdir -p /data \
+    && chown -R signalops:signalops /data
+USER signalops
+
+ENV SIGNALOPS_DB=/data/signalops.db
+ENV PORT=8000
+EXPOSE 8000
+
+CMD ["signalops-web"]

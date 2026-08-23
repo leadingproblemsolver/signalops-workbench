@@ -1,0 +1,245 @@
+name: hackathon-live-deploy-receipt
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_id:
+        description: Google Cloud project ID
+        required: true
+      region:
+        description: Cloud Run region
+        required: true
+        default: me-central1
+      service:
+        description: Cloud Run service name
+        required: true
+        default: signalops-serpapi
+      query:
+        description: Live SerpApi judge query
+        required: true
+        default: AI agent production reliability hiring OR looking for help
+
+permissions:
+  contents: read
+
+jobs:
+  live-deploy-receipt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Require external credentials
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+          SERPAPI_API_KEY: ${{ secrets.SERPAPI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          test -n "$GCP_CREDENTIALS" || (echo 'GCP_CREDENTIALS repository secret is required' && exit 1)
+          test -n "$SERPAPI_API_KEY" || (echo 'SERPAPI_API_KEY repository secret is required' && exit 1)
+          test -n "$OPENAI_API_KEY" || (echo 'OPENAI_API_KEY repository secret is required' && exit 1)
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install SignalOps
+        run: python -m pip install -e .
+
+      - name: Generate credentialed pre-deploy acceptance receipt
+        env:
+          SERPAPI_API_KEY: ${{ secrets.SERPAPI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: gpt-5.6-luna
+          SIGNALOPS_DB: artifacts/live/predeploy.db
+        run: |
+          mkdir -p artifacts/live
+          python scripts/hackathon_live_smoke.py \
+            --query '${{ inputs.query }}' \
+            --limit 3 \
+            --output artifacts/live/credentialed-live-smoke.json
+
+      - id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+          project_id: ${{ inputs.project_id }}
+
+      - uses: google-github-actions/setup-gcloud@v3
+        with:
+          project_id: ${{ inputs.project_id }}
+
+      - name: Enable Cloud Run build APIs
+        run: |
+          gcloud services enable \
+            run.googleapis.com \
+            cloudbuild.googleapis.com \
+            artifactregistry.googleapis.com \
+            --project '${{ inputs.project_id }}'
+
+      - name: Deploy exact hackathon branch to Cloud Run
+        shell: bash
+        env:
+          SERPAPI_API_KEY: ${{ secrets.SERPAPI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          set -euo pipefail
+          cp Dockerfile.hackathon Dockerfile
+          trap 'rm -f Dockerfile' EXIT
+
+          gcloud run deploy '${{ inputs.service }}' \
+            --source . \
+            --project '${{ inputs.project_id }}' \
+            --region '${{ inputs.region }}' \
+            --allow-unauthenticated \
+            --set-env-vars "SERPAPI_API_KEY=${SERPAPI_API_KEY},OPENAI_API_KEY=${OPENAI_API_KEY},OPENAI_MODEL=gpt-5.6-luna,SIGNALOPS_DB=/tmp/signalops-hackathon.db"
+
+      - name: Capture public deployment URL and health
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL="$(gcloud run services describe '${{ inputs.service }}' \
+            --project '${{ inputs.project_id }}' \
+            --region '${{ inputs.region }}' \
+            --format='value(status.url)')"
+          REVISION="$(gcloud run services describe '${{ inputs.service }}' \
+            --project '${{ inputs.project_id }}' \
+            --region '${{ inputs.region }}' \
+            --format='value(status.latestReadyRevisionName)')"
+          test -n "$URL"
+          test -n "$REVISION"
+          printf '%s\n' "$URL" | tee artifacts/live/cloud-run-url.txt
+          printf '%s\n' "$REVISION" | tee artifacts/live/cloud-run-revision.txt
+
+          gcloud run services describe '${{ inputs.service }}' \
+            --project '${{ inputs.project_id }}' \
+            --region '${{ inputs.region }}' \
+            --format='json(metadata.name,status.url,status.latestReadyRevisionName,status.traffic)' \
+            > artifacts/live/cloud-run-public-metadata.json
+
+          curl --fail --silent --show-error "$URL/health" \
+            | tee artifacts/live/deployed-health.json
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          health = json.loads(Path('artifacts/live/deployed-health.json').read_text())
+          assert health['status'] == 'ok'
+          assert health['serpapi_configured'] is True
+          assert health['ai_configured'] is True
+          PY
+
+      - name: Exercise deployed discovery and immutable outcome path
+        shell: bash
+        env:
+          JUDGE_QUERY: ${{ inputs.query }}
+        run: |
+          set -euo pipefail
+          URL="$(cat artifacts/live/cloud-run-url.txt)"
+          export URL
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+          from pathlib import Path
+
+          base = os.environ['URL'].rstrip('/')
+          query = os.environ['JUDGE_QUERY']
+
+          def post(path, payload):
+              req = urllib.request.Request(
+                  base + path,
+                  data=json.dumps(payload).encode(),
+                  headers={'Content-Type': 'application/json'},
+                  method='POST',
+              )
+              with urllib.request.urlopen(req, timeout=90) as response:
+                  return response.status, json.loads(response.read())
+
+          status, discover = post('/api/discover', {
+              'query': query,
+              'goal': 'Find current, externally verifiable opportunities where a technical operator can create useful value.',
+              'limit': 3,
+              'location': '',
+          })
+          assert status == 200
+          assert discover['serpapi_results'] >= 1
+          assert discover['decisions']
+          first = discover['decisions'][0]
+          assert first['external_id']
+          assert first['search_id']
+          assert first['observed_fact']
+          assert first['url']
+          Path('artifacts/live/deployed-discovery.json').write_text(
+              json.dumps(discover, indent=2, sort_keys=True) + '\n'
+          )
+
+          status, outcome = post(f"/api/outcomes/{first['external_id']}", {
+              'outcome': 'saved',
+              'notes': 'Recorded by the credentialed Cloud Run submission receipt workflow.',
+          })
+          assert status == 200
+          assert outcome['status'] == 'recorded'
+          assert outcome['receipt']['event_type'] == 'outcome_recorded'
+          Path('artifacts/live/deployed-outcome.json').write_text(
+              json.dumps(outcome, indent=2, sort_keys=True) + '\n'
+          )
+          PY
+
+      - name: Write receipt index
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('artifacts/live')
+          url = (root / 'cloud-run-url.txt').read_text().strip() if (root / 'cloud-run-url.txt').exists() else None
+          revision = (root / 'cloud-run-revision.txt').read_text().strip() if (root / 'cloud-run-revision.txt').exists() else None
+          health = json.loads((root / 'deployed-health.json').read_text()) if (root / 'deployed-health.json').exists() else None
+          smoke = json.loads((root / 'credentialed-live-smoke.json').read_text()) if (root / 'credentialed-live-smoke.json').exists() else None
+          outcome = json.loads((root / 'deployed-outcome.json').read_text()) if (root / 'deployed-outcome.json').exists() else None
+          smoke_passed = bool(
+              smoke
+              and smoke.get('stable_id_reused_on_repeat') is True
+              and smoke.get('outcome_receipt', {}).get('event_id')
+              and smoke.get('serpapi_results', 0) >= 1
+          )
+          receipt = {
+              'receipt_version': 1,
+              'commit_sha': '${{ github.sha }}',
+              'project_id': '${{ inputs.project_id }}',
+              'region': '${{ inputs.region }}',
+              'service': '${{ inputs.service }}',
+              'cloud_run_url': url,
+              'cloud_run_revision': revision,
+              'health': health,
+              'predeploy_live_smoke_passed': smoke_passed,
+              'serpapi_search_ids': smoke.get('serpapi_search_ids', []) if smoke else [],
+              'deployed_outcome_event': outcome.get('receipt', {}).get('event_type') if outcome else None,
+              'claim_boundary': {
+                  'proves': [
+                      'credentialed SerpApi + OpenAI + deterministic SignalOps acceptance path',
+                      'the exact branch was deployed as a public Cloud Run service',
+                      'deployed health observed both credentials configured',
+                      'the deployed service performed live discovery and persisted an immutable outcome event',
+                  ],
+                  'does_not_prove': [
+                      'customer demand',
+                      'revenue',
+                      'conversion',
+                      'hackathon placement',
+                  ],
+              },
+          }
+          (root / 'receipt-index.json').write_text(json.dumps(receipt, indent=2, sort_keys=True) + '\n')
+          PY
+
+      - name: Upload live deployment receipt pack
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: signalops-serpapi-live-${{ github.sha }}
+          path: artifacts/live/
+          if-no-files-found: error

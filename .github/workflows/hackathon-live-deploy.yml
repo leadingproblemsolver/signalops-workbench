@@ -39,7 +39,7 @@ jobs:
           test -n "$SERPAPI_API_KEY" || (echo 'SERPAPI_API_KEY repository secret is required' && exit 1)
           test -n "$OPENAI_API_KEY" || (echo 'OPENAI_API_KEY repository secret is required' && exit 1)
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
 
@@ -102,8 +102,14 @@ jobs:
             --project '${{ inputs.project_id }}' \
             --region '${{ inputs.region }}' \
             --format='value(status.url)')"
+          REVISION="$(gcloud run services describe '${{ inputs.service }}' \
+            --project '${{ inputs.project_id }}' \
+            --region '${{ inputs.region }}' \
+            --format='value(status.latestReadyRevisionName)')"
           test -n "$URL"
+          test -n "$REVISION"
           printf '%s\n' "$URL" | tee artifacts/live/cloud-run-url.txt
+          printf '%s\n' "$REVISION" | tee artifacts/live/cloud-run-revision.txt
 
           gcloud run services describe '${{ inputs.service }}' \
             --project '${{ inputs.project_id }}' \
@@ -190,9 +196,16 @@ jobs:
 
           root = Path('artifacts/live')
           url = (root / 'cloud-run-url.txt').read_text().strip() if (root / 'cloud-run-url.txt').exists() else None
+          revision = (root / 'cloud-run-revision.txt').read_text().strip() if (root / 'cloud-run-revision.txt').exists() else None
           health = json.loads((root / 'deployed-health.json').read_text()) if (root / 'deployed-health.json').exists() else None
           smoke = json.loads((root / 'credentialed-live-smoke.json').read_text()) if (root / 'credentialed-live-smoke.json').exists() else None
           outcome = json.loads((root / 'deployed-outcome.json').read_text()) if (root / 'deployed-outcome.json').exists() else None
+          smoke_passed = bool(
+              smoke
+              and smoke.get('stable_id_reused_on_repeat') is True
+              and smoke.get('outcome_receipt', {}).get('event_id')
+              and smoke.get('serpapi_results', 0) >= 1
+          )
           receipt = {
               'receipt_version': 1,
               'commit_sha': '${{ github.sha }}',
@@ -200,8 +213,10 @@ jobs:
               'region': '${{ inputs.region }}',
               'service': '${{ inputs.service }}',
               'cloud_run_url': url,
+              'cloud_run_revision': revision,
               'health': health,
-              'predeploy_live_smoke_passed': bool(smoke and smoke.get('acceptance', {}).get('stable_external_id_reused') and smoke.get('acceptance', {}).get('outcome_event_persisted')),
+              'predeploy_live_smoke_passed': smoke_passed,
+              'serpapi_search_ids': smoke.get('serpapi_search_ids', []) if smoke else [],
               'deployed_outcome_event': outcome.get('receipt', {}).get('event_type') if outcome else None,
               'claim_boundary': {
                   'proves': [

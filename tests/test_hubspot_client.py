@@ -35,6 +35,7 @@ class HubSpotClientTests(unittest.TestCase):
             {
                 "name": "Example AI",
                 "domain": "Example.AI",
+                "url": "https://www.linkedin.com/company/example-ai",
                 "description": "Observed company description",
                 "enrichments": [
                     {"name": "Tech Stack", "state": "completed", "value": "AWS"},

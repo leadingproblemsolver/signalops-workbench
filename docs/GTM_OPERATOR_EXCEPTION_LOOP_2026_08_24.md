@@ -17,6 +17,8 @@ No adoption, ROI, or operator-impact claim is made yet.
 - 14 threaded follow-ups sent with the same comparable causal object and a bounded reciprocity offer.
 - 28 outbound email events total.
 - Current response state at capture time: `WAITING_EXTERNAL`; no meaningful operator reply received yet.
+- Current observed bounce state: `0`.
+- Gmail canonical waiting label: `SignalOps GTM / Waiting External`.
 
 The cohort spans freight forwarding, freight networks, ports/terminals, shipping, warehousing/distribution, last-mile, and logistics/digital-transformation roles.
 
@@ -51,6 +53,23 @@ SignalOps return:
 
 The reconstruction is sent back for correction, rejection, or internal use.
 
+## Receipt assimilation contract
+
+`docs/gtm_receipt_router.yaml` converts every external GTM event into exactly one evidence-state update and at most one next external transition.
+
+Canonical event classes:
+
+- reply with concrete exception
+- reply without a concrete exception
+- referral
+- correction to reconstruction
+- explicit second use / repeat request
+- bounce
+- explicit rejection of the problem framing
+- no response
+
+No external event may silently disappear into inbox history or silently promote SignalOps' evidence state.
+
 ## Required next evidence event
 
 The loop does not advance on more internal feature work. It advances when one of these occurs:
@@ -66,6 +85,7 @@ The loop does not advance on more internal feature work. It advances when one of
 - Direct operator email threads — live distribution and primary market-truth surface.
 - `docs/operator-exception-probe.html` — reusable observer-facing research artifact.
 - `docs/operator-exception-reconstruction-template.html` — reusable operator-correctable return artifact.
+- `docs/gtm_receipt_router.yaml` — machine-readable event-to-transition router.
 - This repository/PR — public provenance showing what was actually tested and what remains unproven.
 
 ## Governing invariant

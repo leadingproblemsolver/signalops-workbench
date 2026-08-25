@@ -167,12 +167,14 @@ class DistributionRouteReceipt:
 
     artifact_key: str
     artifact_id: str
+    artifact_url: str
     account_name: str
     account_search_identifier: str
     account_observed_domain: str
     account_source_id: str
     contact_name: str
     contact_title: str
+    contact_profile_url: str
     contact_source_id: str
     fit_reasons: tuple[str, ...]
     personalization_evidence: tuple[str, ...]
@@ -234,12 +236,14 @@ def route_artifact_to_clay_target(
     return DistributionRouteReceipt(
         artifact_key=artifact.artifact_key,
         artifact_id=artifact.artifact_id,
+        artifact_url=artifact.artifact_url,
         account_name=company.company,
         account_search_identifier=search_domain,
         account_observed_domain=observed_domain,
         account_source_id=company.provenance_id,
         contact_name=contact.name,
         contact_title=contact.title,
+        contact_profile_url=contact.profile_url,
         contact_source_id=contact.provenance_id,
         fit_reasons=reasons,
         personalization_evidence=personalization,

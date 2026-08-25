@@ -15,4 +15,4 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Scan caller repository
-        run: semgrep scan --config auto --error --metrics=off .
+        run: semgrep scan --config auto --error .

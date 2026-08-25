@@ -1,0 +1,120 @@
+{
+  "snapshot_date": "2026-08-25",
+  "canonical_router": "leadingproblemsolver/signalops-workbench",
+  "rules": {
+    "producer_branch_prefix": "dist/clay-signalops-",
+    "controller_branch_prefix": "feat/clay-signalops-",
+    "terminal_router_action": "human_review",
+    "external_send_default": false,
+    "unknown_market_state": "target_unresolved"
+  },
+  "controllers": [
+    {
+      "workstreams": ["Convert Clay Workflows", "Direct GTM Chats", "Logistics Reply Watch", "Related Chats Map"],
+      "repo": "leadingproblemsolver/signalops-workbench",
+      "branch": "feat/clay-market-distribution-router-2026-08-25",
+      "role": "Clay normalization, deterministic routing, identity/provenance, outcome memory",
+      "state": "implemented_ci_green"
+    },
+    {
+      "workstreams": ["Market Frontier Watch", "Market Assimilation Scan", "Accelerator GTM Strategy"],
+      "repo": "leadingproblemsolver/market-intel-pipeline",
+      "branch": "feat/clay-signalops-market-intel-export-2026-08-25",
+      "role": "reviewed market evidence to explicit Clay search intent",
+      "state": "implemented_ci_green"
+    },
+    {
+      "workstreams": ["Map Job Applications", "Finalize Role Packs", "Map Technical Proof Contracts", "Resume Tailoring"],
+      "repo": "leadingproblemsolver/project-spec-compiler",
+      "branch": "feat/clay-signalops-role-proof-router-2026-08-25",
+      "role": "role requirement/proof state to Clay observer search packet",
+      "state": "implemented_ci_green"
+    },
+    {
+      "workstreams": ["Direct GTM Chats", "Immediate Gains / P-1", "Community Embedding", "First-$10k distribution"],
+      "repo": "leadingproblemsolver/direct-delivery-ops",
+      "branch": "feat/clay-signalops-human-approval-handoff-2026-08-25",
+      "role": "SignalOps route to unsent approval-gated delivery proposal",
+      "state": "implemented_ci_repair_running"
+    },
+    {
+      "workstreams": ["Repo OS Generator", "future project externalization"],
+      "repo": "leadingproblemsolver/repo_os_generator",
+      "branch": "feat/clay-signalops-market-manifest-generator-2026-08-25",
+      "role": "generate explicit producer manifest and its GitHub contract CI",
+      "state": "implemented_ci_green"
+    }
+  ],
+  "producers": [
+    {
+      "workstreams": ["Driver Recruiting Constraint Diagnostic", "trucking GTM"],
+      "repo": "leadingproblemsolver/driver-hiring-insight",
+      "branch": "dist/clay-signalops-fleet-recruiting-audit-manifest-2026-08-25",
+      "state": "functional_green_hygiene_debt_recorded"
+    },
+    {
+      "workstreams": ["Ulomis QDB", "pilot recruitment", "learning continuity"],
+      "repo": "leadingproblemsolver/ulomis-continuity-companion",
+      "branch": "dist/clay-signalops-ulomis-learning-continuity-manifest-2026-08-25",
+      "state": "functional_green_hygiene_debt_recorded"
+    },
+    {
+      "workstreams": ["DriftGuard", "agent reliability preflight"],
+      "repo": "leadingproblemsolver/driftguard",
+      "branch": "dist/clay-signalops-driftguard-settlement-preflight-manifest-2026-08-25",
+      "state": "router_green_product_validation_running"
+    },
+    {
+      "workstreams": ["RealityLatch", "Logistinfra Reality Handoff", "logistics evidence gate"],
+      "repo": "leadingproblemsolver/realitylatch",
+      "branch": "dist/clay-signalops-realitylatch-logistics-proof-manifest-2026-08-25",
+      "state": "product_market_security_green"
+    },
+    {
+      "workstreams": ["Quicklarity", "Immediate Gains", "founder/operator execution"],
+      "repo": "leadingproblemsolver/quicklarity",
+      "branch": "dist/clay-signalops-quickarity-founder-operator-manifest-2026-08-25",
+      "state": "full_green"
+    },
+    {
+      "workstreams": ["TraceCrumb", "incident proof", "SRE distribution"],
+      "repo": "leadingproblemsolver/TraceCrumb",
+      "branch": "dist/clay-signalops-tracecrumb-sre-first60-manifest-2026-08-25",
+      "state": "router_green_product_validation_running"
+    }
+  ],
+  "target_unresolved": [
+    {
+      "workstreams": ["Operational Waste Recovery", "Recovery Agent", "Start Codex Adapter Sprint"],
+      "repo": "leadingproblemsolver/operational-waste-recovery",
+      "reason": "strong activation/deploy contract but no sufficiently explicit commercial observer role selected"
+    },
+    {
+      "workstreams": ["Reality Handoff Agent", "Agents That Do Real Work"],
+      "repo": "leadingproblemsolver/realityhandoff-agent",
+      "reason": "judge-facing and DataHub acceptance path are explicit; market buyer/observer is not yet explicit"
+    },
+    {
+      "workstreams": ["DecisionKillSwitch", "secure AI backend proof"],
+      "repo": "leadingproblemsolver/thedecisionkillwitch",
+      "reason": "engineering proof is explicit but product buyer/market consequence is not yet grounded"
+    },
+    {
+      "workstreams": ["Reality ontology chats"],
+      "repos": [
+        "leadingproblemsolver/realityloop",
+        "leadingproblemsolver/reality-constrained-context-engine",
+        "leadingproblemsolver/living-context-engine"
+      ],
+      "reason": "ontology/platform scope is broader than a verified market wedge; route only a bounded externally judged artifact"
+    },
+    {
+      "workstreams": ["IncidentOps", "incident cognition"],
+      "repos": [
+        "leadingproblemsolver/operational-incident-cognition",
+        "leadingproblemsolver/incident-memory-layer"
+      ],
+      "reason": "requires canonical active artifact and explicit observer before adding a second incident-routing surface"
+    }
+  ]
+}

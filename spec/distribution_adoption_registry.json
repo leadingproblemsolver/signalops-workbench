@@ -35,7 +35,7 @@
       "repo": "leadingproblemsolver/direct-delivery-ops",
       "branch": "feat/clay-signalops-human-approval-handoff-2026-08-25",
       "role": "SignalOps route to unsent approval-gated delivery proposal",
-      "state": "implemented_ci_repair_running"
+      "state": "implemented_ci_green"
     },
     {
       "workstreams": ["Repo OS Generator", "future project externalization"],
@@ -50,19 +50,19 @@
       "workstreams": ["Driver Recruiting Constraint Diagnostic", "trucking GTM"],
       "repo": "leadingproblemsolver/driver-hiring-insight",
       "branch": "dist/clay-signalops-fleet-recruiting-audit-manifest-2026-08-25",
-      "state": "functional_green_hygiene_debt_recorded"
+      "state": "functional_market_green_security_fix_rerun_queued_hygiene_debt_recorded"
     },
     {
       "workstreams": ["Ulomis QDB", "pilot recruitment", "learning continuity"],
       "repo": "leadingproblemsolver/ulomis-continuity-companion",
       "branch": "dist/clay-signalops-ulomis-learning-continuity-manifest-2026-08-25",
-      "state": "functional_green_hygiene_debt_recorded"
+      "state": "functional_market_green_security_fix_rerun_queued_hygiene_debt_recorded"
     },
     {
       "workstreams": ["DriftGuard", "agent reliability preflight"],
       "repo": "leadingproblemsolver/driftguard",
       "branch": "dist/clay-signalops-driftguard-settlement-preflight-manifest-2026-08-25",
-      "state": "router_green_product_validation_running"
+      "state": "market_green_security_fixes_applied_validation_pending"
     },
     {
       "workstreams": ["RealityLatch", "Logistinfra Reality Handoff", "logistics evidence gate"],
@@ -74,13 +74,13 @@
       "workstreams": ["Quicklarity", "Immediate Gains", "founder/operator execution"],
       "repo": "leadingproblemsolver/quicklarity",
       "branch": "dist/clay-signalops-quickarity-founder-operator-manifest-2026-08-25",
-      "state": "full_green"
+      "state": "product_market_green_runtime_security_fix_rerun_queued"
     },
     {
       "workstreams": ["TraceCrumb", "incident proof", "SRE distribution"],
       "repo": "leadingproblemsolver/TraceCrumb",
       "branch": "dist/clay-signalops-tracecrumb-sre-first60-manifest-2026-08-25",
-      "state": "router_green_product_validation_running"
+      "state": "deploy_preview_building_e2e_waiting_security_and_product_checks_queued_or_running"
     }
   ],
   "target_unresolved": [

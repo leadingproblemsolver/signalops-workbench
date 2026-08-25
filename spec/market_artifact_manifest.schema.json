@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/leadingproblemsolver/signalops-workbench/spec/market_artifact_manifest.schema.json",
+  "title": "SignalOps Market Artifact Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "repo",
+    "artifact_id",
+    "artifact_url",
+    "system",
+    "wedge",
+    "target_roles",
+    "proof_refs",
+    "desired_consequence"
+  ],
+  "properties": {
+    "repo": {"type": "string", "minLength": 1},
+    "artifact_id": {"type": "string", "minLength": 1},
+    "artifact_url": {"type": "string", "minLength": 1},
+    "system": {"type": "string", "minLength": 1},
+    "wedge": {"type": "string", "minLength": 1},
+    "target_roles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "pain_signals": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "proof_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "desired_consequence": {"type": "string", "minLength": 1}
+  }
+}

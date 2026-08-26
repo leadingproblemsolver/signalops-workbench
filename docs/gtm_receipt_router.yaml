@@ -1,0 +1,102 @@
+SIGNALOPS_GTM_RECEIPT_ROUTER:
+  version: "2026-08-24"
+
+  purpose: >
+    Convert external GTM events into deterministic product/market state updates
+    and exactly one next transition without manual inbox reconstruction.
+
+  governing_rule: >
+    External response changes priority immediately. No reply, bounce, referral,
+    correction, rejection, or operator case may remain as unstructured inbox state.
+
+  canonical_states:
+    - WAITING_EXTERNAL
+    - BOUNCED
+    - REFERRED
+    - REPLIED_NO_CASE
+    - REAL_EXCEPTION_RECEIVED
+    - RECONSTRUCTION_SENT
+    - OPERATOR_CORRECTED
+    - SECOND_USE
+    - PILOT_ACTIVE
+    - KILLED
+
+  event_routes:
+    reply_with_concrete_exception:
+      promote_to: REAL_EXCEPTION_RECEIVED
+      extract:
+        - trigger
+        - evidence_sources
+        - actors
+        - ownership_transitions
+        - action
+        - settlement_definition
+        - time_or_cognitive_tax_if_supplied
+        - operator_language
+      next_external_transition: >
+        Build and return one evidence-bounded operator-correctable reconstruction.
+      forbidden:
+        - invent_missing_fields
+        - infer_roi
+        - claim_adoption
+
+    reply_without_concrete_exception:
+      promote_to: REPLIED_NO_CASE
+      next_external_transition: >
+        Ask for one recent example in 2-3 lines or request the closest operator owner.
+
+    referral:
+      promote_to: REFERRED
+      next_external_transition: >
+        Contact the referred operator in-thread/context and preserve referral provenance.
+
+    correction_to_reconstruction:
+      promote_to: OPERATOR_CORRECTED
+      next_external_transition: >
+        Update the canonical workflow and ask whether the corrected reconstruction is useful enough to reuse on the next similar exception.
+
+    explicit_second_use_or_repeat_request:
+      promote_to: SECOND_USE
+      next_external_transition: >
+        Run the second real case and measure time-to-evidence, time-to-owner,
+        time-to-first-authorized-action, and time-to-verified-settlement where observable.
+
+    bounce:
+      promote_to: BOUNCED
+      next_external_transition: >
+        Replace the access path for the same company/role before changing ICP or product hypothesis.
+
+    explicit_rejection_of_problem:
+      promote_to: KILLED
+      next_external_transition: >
+        Record the operator's counter-model verbatim and update the hypothesis before more outreach to the same workflow segment.
+
+    no_response:
+      promote_to: WAITING_EXTERNAL
+      next_external_transition: null
+      rule: >
+        No-response before a reasonable follow-up window is not negative market evidence.
+
+  current_cohort_snapshot:
+    captured_at: "2026-08-24T21:37:00+03:00"
+    distinct_threads: 14
+    outbound_events: 28
+    meaningful_replies: 0
+    bounces: 0
+    state: WAITING_EXTERNAL
+    gmail_label: "SignalOps GTM / Waiting External"
+
+  settlement_fields:
+    - event_type
+    - company
+    - role_surface
+    - source_thread
+    - evidence_delta
+    - hypothesis_delta
+    - current_state
+    - next_external_transition
+    - receipt
+
+  invariant: >
+    No external GTM event may silently disappear into inbox history or silently
+    promote SignalOps evidence state.

@@ -1,0 +1,29 @@
+{
+  "experiment_id": "realitylatch-logistics-return-2026-08-27",
+  "artifact_family": "realitylatch-public-evidence-exception-settlement",
+  "status": "ready_for_human_review",
+  "historical_control": {
+    "cohort": "operator-exception-cold-outreach-2026-08-24",
+    "reuse_in_test": false
+  },
+  "target_cohort_size": 12,
+  "minimum_balanced_cohort_size": 9,
+  "strategies": [
+    "rapport_first",
+    "useful_artifact_first",
+    "micro_pilot"
+  ],
+  "public_evidence_payloads": [
+    "starlinks-robotics-fulfilment-settlement-boundary",
+    "momentum-cross-border-ltl-exception-surface",
+    "fleet-line-jafza-project-roro-handoff-map",
+    "mfc-heavy-lift-evidence-settlement-boundary"
+  ],
+  "next_action": "human_review",
+  "autonomous_send": false,
+  "adoption_outcomes": [
+    "pilot_used",
+    "second_use",
+    "purchase"
+  ]
+}

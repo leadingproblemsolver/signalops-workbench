@@ -4,6 +4,30 @@
 
 SignalOps preserves exact observed language separately from interpretation, scores relevance deterministically, enforces channel-specific permission boundaries, upserts repeated surfaces, and renders restartable action state.
 
+## SignalOps × SerpApi — judge path
+
+The current hackathon application turns **live SerpApi search evidence** into a provenance-preserving, AI-assisted, policy-gated queue of justified external actions:
+
+```text
+live SerpApi result
+→ observed evidence + provenance
+→ separate bounded AI inference
+→ deterministic SignalOps policy
+→ durable external identity
+→ append-only outcome receipt
+```
+
+**Core invariant:** the model may interpret evidence, but it cannot authorize the final action or rewrite what the source originally said.
+
+Start here:
+
+- [SerpApi hackathon build](docs/HACKATHON_SERPAPI.md)
+- [judge/Devpost submission pack](docs/DEVPOST_SUBMISSION.md)
+- [canonical live deploy + receipt workflow](.github/workflows/hackathon-live-deploy.yml)
+- [public live-status receipt](https://github.com/leadingproblemsolver/signalops-workbench/blob/proof/serpapi-live-status/proof/serpapi-live-latest.json) — authoritative only after it reports `proof_status: VERIFIED`
+
+No additional hackathon architecture is planned before the live receipt, demo video, and submission are complete.
+
 ## MicroSaaS v0
 
 SignalOps is being narrowed into a decision layer between market evidence and GTM action:

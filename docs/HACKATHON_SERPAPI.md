@@ -4,122 +4,154 @@
 
 ## Hackathon lineage disclosure
 
-DevNetwork's 2026 instructions say teams should build apps from scratch. The **judge-facing hackathon application layer** in this branch is new for the event: the SerpApi acquisition adapter, constrained AI assessor, judge UI, immutable outcome-receipt surface, live acceptance script, and deployment entrypoint. It reuses the pre-existing SignalOps deterministic policy/state core as an explicitly disclosed component; do not imply the original SignalOps workbench was created during the hackathon.
+The judge-facing application layer is the SerpApi acquisition adapter, constrained AI assessor, judge UI, immutable outcome-receipt surface, live acceptance script, Cloud Run deployment/proof workflow, and submission material. It reuses the pre-existing SignalOps deterministic policy/state core as an explicitly disclosed component; do not imply the original workbench was created during the event.
 
 ## Why SerpApi is central
 
-SignalOps previously accepted manually supplied public evidence. This hackathon branch adds a live acquisition path powered by SerpApi's Google Search API:
+SignalOps previously accepted manually supplied public evidence. The hackathon application adds a live acquisition path powered by SerpApi's Google Search API:
 
-`SerpApi live results -> source-linked evidence -> constrained AI interpretation -> deterministic SignalOps policy -> durable action queue -> immutable outcome receipt`
+```text
+SerpApi live result
+→ source-linked observed evidence
+→ constrained AI interpretation
+→ deterministic SignalOps policy
+→ durable action identity
+→ append-only outcome receipt
+```
 
-Without SerpApi, this hackathon application has no live web acquisition layer; the sponsor API is therefore functionally central rather than decorative.
+Without SerpApi, the hackathon application has no live web acquisition layer. A successful live proof must contain a real SerpApi search ID.
 
-## Trust boundary
+## Architecture and authority boundary
 
-- SerpApi supplies the source URL, title, snippet, freshness metadata, position, and search ID.
+```mermaid
+flowchart LR
+    U[Operator query + goal] --> S[SerpApi]
+    S --> E[Observed evidence + provenance]
+    E --> A[Constrained AI assessor]
+    A --> I[Separate inference + bounded scores]
+    E --> P[Deterministic SignalOps policy]
+    I --> P
+    P --> D[(Durable state)]
+    D --> Q[Justified next action]
+    Q --> O[Outcome]
+    O --> R[Append-only receipt]
+```
+
+- SerpApi supplies source URL, title, snippet, freshness metadata when available, position, and search ID.
 - Source-provided language is stored as observed evidence.
 - The AI assessor may produce only a separate inference plus bounded relevance/urgency/conversation scores.
 - The model cannot authorize outreach or overwrite observed evidence.
-- Existing SignalOps policy deterministically resolves `ignore`, `save`, `public_reply`, `dm`, or `call`.
-- Existing permission rules still block private escalation without a prior public response.
+- SignalOps policy deterministically resolves the next action.
 - SQLite preserves durable surfaces and immutable event history.
-- Outcome receipts append to event history and never rewrite the original evidence event.
-
-## Configure
-
-```bash
-export SERPAPI_API_KEY='...'
-export OPENAI_API_KEY='...'
-# optional
-export OPENAI_MODEL='gpt-5.6-luna'
-export SIGNALOPS_DB='data/hackathon.db'
-```
+- Outcome receipts append and never rewrite the original evidence event.
 
 ## Run locally
 
 ```bash
+export SERPAPI_API_KEY='...'
+export OPENAI_API_KEY='...'
+export OPENAI_MODEL='gpt-5.6-luna'
+export SIGNALOPS_DB='data/hackathon.db'
+
 python -m pip install -e .
 uvicorn signalops.hackathon:app --reload
 ```
 
 Open `http://127.0.0.1:8000`.
 
-## Public container path
+## Judge workflow
 
-```bash
-docker build -f Dockerfile.hackathon -t signalops-serpapi .
-docker run --rm -p 8080:8080 \
-  -e SERPAPI_API_KEY \
-  -e OPENAI_API_KEY \
-  -e OPENAI_MODEL=gpt-5.6-luna \
-  signalops-serpapi
-```
-
-Open `http://127.0.0.1:8080`.
-
-## Judge demo path
-
-1. Enter a live query describing a current operational problem or buyer trigger.
+1. Enter a current search query and decision goal.
 2. Click **Discover and resolve**.
-3. Show the SerpApi result count and source-linked cards.
-4. Open one card's source in a new tab to prove provenance.
-5. Point out the separate **Observed evidence** and **AI inference** fields.
-6. Point out the deterministic action + score and policy reason.
-7. Re-run the same query/result and show durable deduplication/upsert behavior in SignalOps state.
-8. Record one outcome and show the immutable outcome receipt while the original observed evidence remains unchanged.
+3. Show the live result count and provenance-bearing source cards.
+4. Open one source directly.
+5. Contrast **Observed evidence** with **AI inference**.
+6. Show deterministic action + score + policy reason.
+7. Record an outcome and show the append-only receipt.
+8. Show the public live-status receipt tied to the exact Cloud Run revision/source commit.
 
-## Machine-checkable gates
+## Deterministic gates
 
 ```bash
 python -m unittest discover -s tests -v
 python scripts/smoke_test.py
-signalops --help
 ```
 
-## One-command live receipt
+The SerpApi/AI tests cover normal structured results plus explicit failures: missing/invalid credentials, malformed API payloads, bounded result limits, missing snippets, invalid AI scores, and output-shape/index constraints.
 
-With real credentials configured:
+## One canonical live proof workflow
+
+Use only:
+
+`.github/workflows/hackathon-live-deploy.yml`
+
+It performs:
+
+```text
+repository tests
+→ real SerpApi key acceptance + provenance search ID
+→ credentialed SerpApi + OpenAI smoke run
+→ GitHub OIDC / Google Workload Identity Federation
+→ exact-source Cloud Run deploy
+→ required /health verification
+→ deployed live discovery
+→ deployed append-only outcome
+→ bounded receipt
+→ public proof branch
+```
+
+Expected public receipt after the workflow runs:
+
+https://github.com/leadingproblemsolver/signalops-workbench/blob/proof/serpapi-live-status/proof/serpapi-live-latest.json
+
+## External prerequisites
+
+Repository Actions secrets:
+- `SERPAPI_API_KEY`
+- `OPENAI_API_KEY`
+
+Google WIF must authorize this repository to impersonate:
+
+`recovery-taskmaster-deployer@signalops-506419.iam.gserviceaccount.com`
+
+One-time binding:
 
 ```bash
-python scripts/hackathon_live_smoke.py \
-  --query "AI agent production reliability hiring OR looking for help"
+gcloud iam service-accounts add-iam-policy-binding \
+  recovery-taskmaster-deployer@signalops-506419.iam.gserviceaccount.com \
+  --project signalops-506419 \
+  --role roles/iam.workloadIdentityUser \
+  --member "principalSet://iam.googleapis.com/projects/625265193189/locations/global/workloadIdentityPools/github-actions/attribute.repository/leadingproblemsolver/signalops-workbench"
 ```
 
-Pass only when it writes `artifacts/live/serpapi_hackathon_receipt.json` and proves:
+No JSON Google service-account key is required or accepted by the canonical workflow.
 
-- at least one real SerpApi result;
-- source-linked observed evidence;
-- separate bounded AI assessment;
-- deterministic SignalOps decision trace;
+## Live acceptance definition
+
+`proof_status: VERIFIED` requires all of the following in one run:
+
+- deterministic tests pass;
+- real SerpApi request returns a search ID;
+- real OpenAI assessment completes;
 - repeated evidence preserves the same stable external ID;
-- an outcome is appended as an immutable event receipt;
-- no secret is written into the receipt.
-
-## Live acceptance
-
-- `GET /health` reports both SerpApi and AI configured;
-- `POST /api/discover` returns at least one real source-linked SerpApi result;
-- every returned decision contains observed evidence, a source URL, separate inference, and deterministic decision trace;
-- a repeated source maps to the same stable SignalOps external ID;
-- `POST /api/outcomes/{external_id}` appends a receipt without mutating the original evidence;
-- no API key appears in browser output, logs committed to the repo, screenshots, or submission artifacts.
+- public Cloud Run service becomes healthy;
+- deployed service returns at least one live source-linked decision;
+- deployed outcome endpoint appends `outcome_recorded`;
+- sanitized receipt records exact source commit, Cloud Run URL, and revision.
 
 ## Claim boundary
 
-### Verified by repository tests once CI passes
+A `VERIFIED` live receipt proves one real source-linked SerpApi + AI + deterministic-policy + durable-state run on the exact Cloud Run deployment named in the receipt. It does **not** prove customer demand, conversion, revenue, production scale, realized financial savings, or hackathon placement.
 
-- SerpApi JSON normalization contract.
-- source-language preservation.
-- bounded AI assessment schema and score validation.
-- deterministic SignalOps policy and durable event state inherited from the existing workbench.
-- judge-facing outcome receipt path uses the immutable event store.
+## Stop condition
 
-### Requires live judge-run evidence
+Once the live receipt is `VERIFIED`, do only:
 
-- successful SerpApi request with real credentials;
-- successful OpenAI assessment with real credentials;
-- deployed public demo URL;
-- end-to-end latency and live-search usefulness;
-- external user/judge response.
+```text
+record 2–4 minute demo
+→ fill Devpost
+→ submit
+→ freeze
+```
 
-Do not claim hackathon placement, adoption, conversion, revenue, or production demand without external receipts.
+Do not add another provider, agent, dashboard, database, or architecture layer before submission.

@@ -1,0 +1,38 @@
+{
+  "authentication": "GitHub OIDC -> Google Workload Identity Federation -> service account impersonation",
+  "claim_boundary": {
+    "does_not_prove": [
+      "customer demand",
+      "realized financial savings",
+      "conversion or revenue",
+      "production scale",
+      "hackathon placement"
+    ],
+    "proves_when_verified": [
+      "the source commit passed deterministic repository tests",
+      "a real SerpApi request returned a provenance search ID",
+      "a real OpenAI assessment completed over SerpApi evidence",
+      "repeated evidence preserved a stable SignalOps external ID",
+      "the exact source commit was deployed to a public Cloud Run service",
+      "the deployed service performed live discovery and appended an outcome receipt"
+    ]
+  },
+  "cloud_run_region": "me-central1",
+  "cloud_run_revision": null,
+  "cloud_run_url": null,
+  "deployed_discovery_observed": false,
+  "deployed_outcome_event": null,
+  "event_name": "workflow_dispatch",
+  "execution_contract": "live SerpApi evidence -> separate AI inference -> deterministic policy -> durable identity -> append-only outcome receipt",
+  "github_workflow_run_id": "33119707216",
+  "last_completed_phase": "prepared",
+  "model": "gpt-5.6-luna",
+  "project_id": "signalops-506419",
+  "proof_status": "INCOMPLETE",
+  "receipt_version": 2,
+  "serpapi_search_ids": [],
+  "service": "signalops-serpapi",
+  "source_commit_sha": "b67a2105a4007dbaf8b1d8fc9148a5004418e2d2",
+  "stable_id_reused_on_repeat": null,
+  "workflow_status": "failure"
+}

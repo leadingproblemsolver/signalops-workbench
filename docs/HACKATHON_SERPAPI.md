@@ -1,3 +1,4 @@
+# Recovery TaskMaster
 # SignalOps × SerpApi — External Opportunity Decision Agent
 
 **One-line pitch:** Turn live web evidence into a provenance-preserving, AI-assisted, policy-gated queue of justified external actions.

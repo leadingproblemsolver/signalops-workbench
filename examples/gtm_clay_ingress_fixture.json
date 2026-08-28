@@ -1,0 +1,20 @@
+{
+  "account": {
+    "name": "Example Logistics",
+    "domain": "example.com"
+  },
+  "contact": {
+    "title": "Digital Transformation Director",
+    "source_id": "clay-stable-entity-id"
+  },
+  "signals": [
+    {
+      "type": "fact",
+      "value": "Public profile describes ERP/WMS/CRM integration leadership",
+      "source_ref": "https://public-source.example/item"
+    }
+  ],
+  "fit_reasons": [
+    "role owns systems integration"
+  ]
+}

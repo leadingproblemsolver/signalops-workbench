@@ -5,4 +5,4 @@ Channel policy → evidence surface → deterministic score → permission gate 
 A modular local monolith is sufficient until multi-user or connector evidence exists.
 
 
-![Project Screenshot](architecture-img.png)
+![Architecture_IMG](https://github.com/leadingproblemsolver/signalops-workbench/blob/main/docs/architecture_img)

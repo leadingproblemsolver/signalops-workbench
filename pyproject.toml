@@ -26,6 +26,7 @@ dependencies = [
 
 [project.scripts]
 signalops = "signalops.cli:main"
+forge = "signalops.forge:main"
 
 [tool.setuptools]
 package-dir = { "" = "src" }

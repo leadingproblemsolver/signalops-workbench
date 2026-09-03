@@ -10,16 +10,28 @@ from signalops.forge import (
     ALLOWED_PREDICTIONS,
     CONTRACT_FIELDS,
     MACHINE_LABEL,
+    OWNERSHIP_FILE,
     _append_event,
     _parse_prediction,
     _render_ownership_contract,
     _run_hostile_challenge,
     _section_values,
+    _validate_ownership,
     inspect_repo,
 )
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _completed_contract(repo: Path, commit: str) -> str:
+    text = _render_ownership_contract(repo, commit)
+    for index, field in enumerate(CONTRACT_FIELDS, start=1):
+        text = text.replace(
+            f"## {index:02d}. {field}\n\n\n",
+            f"## {index:02d}. {field}\n\nhuman answer {index}\n\n",
+        )
+    return text
 
 
 class ForgeTests(unittest.TestCase):
@@ -66,6 +78,50 @@ class ForgeTests(unittest.TestCase):
         self.assertTrue(all(value == "" for value in values.values()))
         self.assertIn("commit=abc123", text)
         self.assertIn("target=src/signalops/hackathon.py", text)
+
+    def test_verify_gate_rejects_incomplete_ownership_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            path = repo / OWNERSHIP_FILE
+            path.parent.mkdir(parents=True)
+            path.write_text(
+                _render_ownership_contract(repo, "current-head"),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(RuntimeError, "ownership contract is incomplete"):
+                _validate_ownership(repo, "current-head")
+
+    def test_verify_gate_rejects_ownership_contract_bound_to_old_head(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            path = repo / OWNERSHIP_FILE
+            path.parent.mkdir(parents=True)
+            path.write_text(
+                _completed_contract(repo, "old-head"),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(RuntimeError, "ownership contract is stale"):
+                _validate_ownership(repo, "new-head")
+
+    def test_verify_gate_accepts_complete_contract_bound_to_current_head(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            path = repo / OWNERSHIP_FILE
+            path.parent.mkdir(parents=True)
+            path.write_text(
+                _completed_contract(repo, "current-head"),
+                encoding="utf-8",
+            )
+
+            _validate_ownership(repo, "current-head")
+
+    def test_prediction_parser_requires_file_before_hostile_execution(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "prediction.md"
+            with self.assertRaisesRegex(RuntimeError, "prediction missing"):
+                _parse_prediction(path)
 
     def test_prediction_parser_accepts_only_bounded_outcomes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

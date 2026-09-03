@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import subprocess
 import tempfile
 import unittest
 
@@ -22,6 +23,20 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 class ForgeTests(unittest.TestCase):
+    def test_installed_forge_inspect_command_returns_json(self) -> None:
+        completed = subprocess.run(
+            ["forge", "inspect", "."],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        payload = json.loads(completed.stdout)
+        self.assertEqual(payload["target_file"], "src/signalops/hackathon.py")
+        self.assertTrue(payload["execution_path"])
+
     def test_inspect_emits_labeled_candidates_for_signalops_path(self) -> None:
         result = inspect_repo(REPO_ROOT)
 

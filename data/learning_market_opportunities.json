@@ -1,0 +1,115 @@
+{
+  "registry_version": 1,
+  "verified_on": "2026-09-09",
+  "claim_boundary": "This is a deliberately small, manually verified registry for the first Learning -> Market Evidence execution slice. Expired opportunities are rejected automatically; source facts must be refreshed before extending the registry.",
+  "opportunities": [
+    {
+      "id": "volthacks-2026",
+      "title": "VoltHacks 2026",
+      "arena": "online student hackathon",
+      "url": "https://volthacks.devpost.com/",
+      "source": "Devpost",
+      "verified_on": "2026-09-09",
+      "valid_from": "2026-09-09",
+      "valid_until": "2026-09-13",
+      "deadline_text": "Sep 13, 2026 at 5:00 PM EDT",
+      "eligibility": {
+        "student_only": true,
+        "min_age": 13,
+        "max_age": null,
+        "global": true,
+        "required_access": []
+      },
+      "capability_tags": [
+        "circuits",
+        "electronics",
+        "hardware",
+        "embedded",
+        "iot",
+        "sensors",
+        "probability",
+        "statistics",
+        "data",
+        "analysis",
+        "python",
+        "ml",
+        "ai"
+      ],
+      "learning_tags": ["circuits", "probability", "statistics", "iot", "machine learning", "electronics"],
+      "evidence_types": ["submission", "external evaluation", "public project"],
+      "contribution": "Build one small hardware/IoT system where circuit/sensor data is turned into a measurable decision; use probability/statistics for thresholds, anomaly detection, uncertainty, or evaluation rather than adding analysis only as decoration.",
+      "action": "Join VoltHacks on Devpost now, create or join a team, choose a hardware/IoT problem, and lock one contribution you can personally own before building.",
+      "receipt": "Devpost registration/team/project URL, followed by the submitted project and judging/result receipt."
+    },
+    {
+      "id": "arduino-uno-q-2026",
+      "title": "Invent the Future with Arduino UNO Q and App Lab",
+      "arena": "Hackster hardware competition",
+      "url": "https://www.hackster.io/contests/invent-the-future-with-arduino-uno-q-and-app-lab",
+      "source": "Hackster",
+      "verified_on": "2026-09-09",
+      "valid_from": "2026-09-09",
+      "valid_until": "2026-09-13",
+      "deadline_text": "Sep 13, 2026 at 11:59 PM PT",
+      "eligibility": {
+        "student_only": false,
+        "min_age": null,
+        "max_age": null,
+        "global": true,
+        "required_access": ["arduino uno q"]
+      },
+      "capability_tags": [
+        "circuits",
+        "electronics",
+        "hardware",
+        "embedded",
+        "iot",
+        "sensors",
+        "python",
+        "ai",
+        "robotics"
+      ],
+      "learning_tags": ["circuits", "electronics", "embedded systems", "iot", "robotics"],
+      "evidence_types": ["submission", "external evaluation", "public project"],
+      "contribution": "Turn one circuit/sensing concept into a reproducible Arduino UNO Q build with working code, schematics, BOM, and measured behavior.",
+      "action": "Only if you already have access to an Arduino UNO Q: register, select one real-world problem, and submit a documented working build before the deadline.",
+      "receipt": "Hackster project/submission URL and judging/result receipt."
+    },
+    {
+      "id": "nasa-space-apps-2026",
+      "title": "2026 NASA Space Apps Challenge",
+      "arena": "global hackathon",
+      "url": "https://www.spaceappschallenge.org/",
+      "source": "NASA Space Apps",
+      "verified_on": "2026-09-09",
+      "valid_from": "2026-09-09",
+      "valid_until": "2026-11-15",
+      "deadline_text": "Registration remains open through the end of the Nov 14-15, 2026 hackathon",
+      "eligibility": {
+        "student_only": false,
+        "min_age": null,
+        "max_age": null,
+        "global": true,
+        "required_access": []
+      },
+      "capability_tags": [
+        "probability",
+        "statistics",
+        "data",
+        "analysis",
+        "python",
+        "ml",
+        "ai",
+        "circuits",
+        "hardware",
+        "sensors",
+        "science"
+      ],
+      "learning_tags": ["probability", "statistics", "data", "science", "engineering", "electronics"],
+      "evidence_types": ["registration", "submission", "external evaluation", "public project"],
+      "contribution": "Use NASA/partner open data or an engineering challenge to produce one inspectable model, tool, experiment, or hardware-informed prototype tied to a published challenge statement.",
+      "action": "Register for Space Apps now and choose a local event or the Universal Event; when challenge summaries open, select one challenge where your current capability can own a measurable contribution.",
+      "receipt": "Space Apps registration/event selection, then team/project submission and judging/result receipt."
+    }
+  ]
+}

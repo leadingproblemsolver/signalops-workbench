@@ -1,0 +1,83 @@
+name: Learning → Market Evidence
+about: Turn current learning into one concrete externally visible action.
+title: "[Learning→Evidence] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Give only the minimum state needed to match you to a current arena. Do not include private, confidential, employer, client, or unreleased project data.
+
+  - type: dropdown
+    id: learner_status
+    attributes:
+      label: Learner status
+      options:
+        - Current student
+        - Self-directed learner
+    validations:
+      required: true
+
+  - type: input
+    id: age
+    attributes:
+      label: Age
+      description: Used only for published eligibility gates.
+      placeholder: "20"
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_learning
+    attributes:
+      label: Current learning
+      description: Courses/topics you are actively learning now.
+      placeholder: "Probability and Statistics; Electric Circuits"
+    validations:
+      required: true
+
+  - type: textarea
+    id: capabilities
+    attributes:
+      label: Capabilities you can already exercise
+      description: Observable things you can do now, even at a basic level.
+      placeholder: "basic circuit analysis, probability/statistics, Python data analysis"
+    validations:
+      required: true
+
+  - type: textarea
+    id: access
+    attributes:
+      label: Access / equipment
+      description: Devices, software, lab access, memberships, or explicit constraints.
+      placeholder: "Laptop, breadboard, basic sensors; no Arduino UNO Q"
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      placeholder: "Qatar"
+    validations:
+      required: true
+
+  - type: input
+    id: hours
+    attributes:
+      label: Hours available this week
+      placeholder: "6"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: preferred_evidence
+    attributes:
+      label: Evidence you want
+      options:
+        - External evaluation
+        - Public project
+        - Submission
+        - Adoption / real use
+        - Any externally visible receipt
+    validations:
+      required: true

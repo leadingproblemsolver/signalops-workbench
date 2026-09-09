@@ -1,0 +1,51 @@
+name: learning-market-evidence
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  match:
+    if: startsWith(github.event.issue.title, '[Learning→Evidence]')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: learning-market-evidence-${{ github.event.issue.number }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Match learner to one current external action
+        id: match
+        shell: bash
+        run: |
+          set +e
+          python scripts/learning_market_match.py \
+            --event "$GITHUB_EVENT_PATH" \
+            --opportunities data/learning_market_opportunities.json \
+            --output /tmp/learning-market-result.md
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Persist operator-visible execution receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        shell: bash
+        run: |
+          gh issue comment "$ISSUE_NUMBER" --body-file /tmp/learning-market-result.md
+
+      - name: Keep failure state visible in Actions
+        if: steps.match.outputs.exit_code != '0'
+        shell: bash
+        run: |
+          echo "Matcher returned bounded failure code ${{ steps.match.outputs.exit_code }}; see the issue comment for recovery instructions."
+          exit 1
